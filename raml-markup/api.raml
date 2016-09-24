@@ -1,0 +1,687 @@
+#%RAML 0.8
+title: Housing Matching Service
+version: 0.1.0
+#baseUri: http://server/api/{version}
+baseUri: http://mocksvc.mulesoft.com/mocks/d380eab8-f7d0-48a4-804b-c816753b395a/api/{version}
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            Supports OAuth 2.0 for authenticating all API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use
+                       with the "access_token" query string parameter.
+                    type: string
+                    example: |
+                      Authorization: Bearer czZCaGRSa3F0MzpnWDFmQmF0M2JW
+            queryParameters:
+                access_token:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use together with
+                       the "Authorization" header
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or Dropbox
+                        revoked or expired an access token. To fix, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won't help here.
+        settings:
+          authorizationUri: https://www.hserv.com/1/oauth2/authorize
+          accessTokenUri: https://api.hserv.com/1/oauth2/token
+          authorizationGrants: [ code, token ]
+mediaType: application/json
+/health:
+  displayName: Get health status of the service.
+  get:
+    description: Returns the health status of the Micro Service.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "status":"ok"
+            }
+/matches:
+  displayName: Trigger the matching process once score calculation is done.
+  post:
+    description: |
+      Use this API to trigger the matching process once score calculation is done. Posting an empty body would suffice.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "triggered":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  get:
+    description: Get the list of the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+              {
+                 "links":[
+                    {
+                       "rel":"first",
+                       "href":"http://localhost:8080/housing-matching/matches?page=0&size=1"
+                    },
+                    {
+                       "rel":"self",
+                       "href":"http://localhost:8080/housing-matching/matches?size=1"
+                    },
+                    {
+                       "rel":"next",
+                       "href":"http://localhost:8080/housing-matching/matches?page=1&size=1"
+                    },
+                    {
+                       "rel":"last",
+                       "href":"http://localhost:8080/housing-matching/matches?page=2&size=1"
+                    }
+                 ],
+                 "content":[
+                    {
+                       "reservationId":"91dc436c-1624-46a5-a3a0-97a5a4a002b4",
+                       "noteId":"Test",
+                       "matchDate":"2016-08-11",
+                       "matchStatus":"accepted",
+                       "reservationChildren":2,
+                       "manualMatch":true,
+                       "inactive":false,
+                       "dateCreated":"2016-08-15",
+                       "dateUpdated":"2016-08-15"
+                    }
+                 ],
+                 "page":{
+                    "size":1,
+                    "totalElements":3,
+                    "totalPages":3
+                 }
+              }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the proposed matche for a client_id.
+      responses:
+        200:
+          body:
+            example : |
+              {
+                    "reservation_id":"12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "user_id": "admin",
+                    "matchedStatus": "true"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the proposed match for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for updating/accepting the match for a client id.
+      body:
+        application/json:
+            example : |
+              {
+                    "reservation_id":"12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "user_id": "admin",
+                    "matchedStatus": "false"
+              }
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "matched":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/scores:
+  displayName: Trigger score totalling once survey responses are ready.
+  post:
+    description: |
+      Trigger score totalling via POST. An Empty body request would suffice.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "triggered":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  get:
+    description: Get the list of clients and their survey scores.
+    responses:
+      200:
+        body:
+          example : |
+                  {
+                     "links":[
+                        {
+                           "rel":"first",
+                           "href":"http://localhost:8080/housing-matching/scores?page=0&size=20"
+                        },
+                        {
+                           "rel":"self",
+                           "href":"http://localhost:8080/housing-matching/scores"
+                        },
+                        {
+                           "rel":"next",
+                           "href":"http://localhost:8080/housing-matching/scores?page=1&size=20"
+                        },
+                        {
+                           "rel":"last",
+                           "href":"http://localhost:8080/housing-matching/scores?page=1&size=20"
+                        }
+                     ],
+                     "content":[
+                        {
+                           "clientId":"90f5b14f-08e1-4999-9ca3-ee7c82c0f054",
+                           "surveyScore":134,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"9346eb6b-1a33-44a7-b997-4cfe516450d7",
+                           "surveyScore":247,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"4c4e0b8e-860c-4daa-a471-a0795835326b",
+                           "surveyScore":176,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"0b421298-9adc-4695-bc2f-18f608d8c153",
+                           "surveyScore":128,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        }
+                     ],
+                     "page":{
+                        "size":20,
+                        "totalElements":31,
+                        "totalPages":2
+                     }
+                  }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the survey scores.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the survey score for a client_id.
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "client_id":"12345",
+                  "survey_score": "12",
+                  "survey_type":custom assesssment"
+                }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the survey score for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for updating survey score for a client id.
+      body:
+        application/json:
+          example: |
+            {
+              "client_id":"12345",
+              "survey_score": "12",
+              "survey_type":custom assesssment"
+            }
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "updated":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/eligibleclients:
+  displayName: Returns a list of Top Eligible Clients
+  get:
+    description: Returns the most eligible clients.
+    responses:
+      200:
+        body:
+          example : |
+                  {
+                     "links":[
+                        {
+                           "rel":"first",
+                           "href":"http://localhost:8080/housing-matching/eligible-clients?page=0&size=20"
+                        },
+                        {
+                           "rel":"self",
+                           "href":"http://localhost:8080/housing-matching/eligible-clients"
+                        },
+                        {
+                           "rel":"next",
+                           "href":"http://localhost:8080/housing-matching/eligible-clients?page=1&size=20"
+                        },
+                        {
+                           "rel":"last",
+                           "href":"http://localhost:8080/housing-matching/eligible-clients?page=1&size=20"
+                        }
+                     ],
+                     "content":[
+                        {
+                           "clientId":"90f5b14f-08e1-4999-9ca3-ee7c82c0f054",
+                           "surveyScore":134,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"9346eb6b-1a33-44a7-b997-4cfe516450d7",
+                           "surveyScore":247,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"4c4e0b8e-860c-4daa-a471-a0795835326b",
+                           "surveyScore":176,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"9e384162-b55c-481f-b68e-5b1a0eb5ca76",
+                           "surveyScore":172,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"1e913d15-a1c3-4404-a82d-6157e1e11215",
+                           "surveyScore":57,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"e06abbdb-c6d7-42c7-9aed-2eda948c6ed5",
+                           "surveyScore":129,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"5274030c-e990-4df8-a7fd-0dc8b78fb9ba",
+                           "surveyScore":172,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"49aaa715-e395-4d4a-92a5-1fd4b609c6f2",
+                           "surveyScore":255,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"dea7f336-46fe-423d-8315-d5a16ae51a56",
+                           "surveyScore":145,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"23eca2dc-30bd-4939-868b-59a337ec8d58",
+                           "surveyScore":112,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"5eb7c88b-a46e-4f43-8d99-e48fc91656e0",
+                           "surveyScore":211,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"3d6d6b94-366f-4bdb-97cf-d49203ba9c8d",
+                           "surveyScore":243,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"4f5a5c25-b367-4e0e-b704-adc432ffc9fe",
+                           "surveyScore":185,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"edc1ee9f-0d87-49b3-940f-b994218b9284",
+                           "surveyScore":238,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"d6fc4117-515e-4351-8266-ca4a919dc1fa",
+                           "surveyScore":110,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"a553b64e-b640-40cc-b26f-e4b547074f09",
+                           "surveyScore":153,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"e98232c0-ef3f-4d7b-a853-baa50ccf7b6f",
+                           "surveyScore":168,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"53248fd4-7b16-4e18-b09e-d148d1fe4565",
+                           "surveyScore":99,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"b80428b1-1fa4-4ad0-840f-86fd4e8cb3e7",
+                           "surveyScore":111,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"0b421298-9adc-4695-bc2f-18f608d8c153",
+                           "surveyScore":128,
+                           "programType":"PSH",
+                           "matched":false,
+                           "spdatLabel":"YOUTH"
+                        }
+                     ],
+                     "page":{
+                        "size":20,
+                        "totalElements":31,
+                        "totalPages":2
+                     }
+                  }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  put:
+    description: Update client list. Will accept json having updated details of one or more clients.
+    body:
+      application/json:
+        example: |
+          {
+            "client_id":"12345",
+            "name":"TestUser",
+            "spdatScore":"23",
+            "surveyDate":"2016-10-10",
+            "matchedStatus":true
+          }
+    responses:
+        200:
+          body:
+            example : |
+              {
+                "updated":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+  post:
+    description: Will add client to the eligible list. Accept json having one or more clients.
+    body:
+      application/json:
+        example: |
+          {
+            "client_id":"12345",
+            "name":"TestUser",
+            "spdatScore":"23",
+            "surveyDate":"2016-10-10",
+            "matchedStatus":true
+          }
+    responses:
+        200:
+          body:
+            example : |
+              {
+                "added":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+  delete:
+    description: Deletes the entire eligible-clients list.
+
+
+
+  /{id}:
+    displayName: Perform operations based on client_id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Fetch a particular client
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "client_id":"12345",
+                "name":"TestUser",
+                "surveyScore":"23",
+                "surveyType":"vi-spdat",
+                "surveyDate":"2016-10-10",
+                "matchedStatus":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    delete:
+      description: Delete a particular client
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "deleted":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    put:
+      description: |
+        This API will be used to modify the deatils of a particular client.
+      body:
+        application/json:
+          example: |
+            {
+              "client_id":"12345",
+              "name":"TestUser",
+              "surveyScore":"23",
+              "surveyType":"vi-spdat",
+              "surveyDate":"2016-10-10",
+              "matchedStatus":true
+            }
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "updated":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
