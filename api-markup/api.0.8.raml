@@ -1,0 +1,1762 @@
+#%RAML 0.8
+title: Housing Matching Service
+version: 0.2.0
+baseUri: https://mocksvc.mulesoft.com/mocks/d380eab8-f7d0-48a4-804b-c816753b395a/api/{version}
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            Supports OAuth 2.0 for authenticating all API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use
+                       with the "access_token" query string parameter.
+                    type: string
+                    example: |
+                      Authorization: Bearer czZCaGRSa3F0MzpnWDFmQmF0M2JW
+            queryParameters:
+                access_token:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use together with
+                       the "Authorization" header
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or Dropbox
+                        revoked or expired an access token. To fix, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won't help here.
+        settings:
+          authorizationUri: https://www.hserv.com/1/oauth2/authorize
+          accessTokenUri: https://api.hserv.com/1/oauth2/token
+          authorizationGrants: [ code, token ]
+mediaType: application/json
+/health:
+  displayName: Get health status of the service.
+  get:
+    description: Returns the health status of the Micro Service.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "status":"ok"
+            }
+/matches:
+  displayName: Trigger the matching process once score calculation is done.
+  post:
+    description: |
+      Use this API to trigger the matching process once score calculation is done. Posting an empty body would suffice.
+    responses:
+      200:
+        body:
+          example : |
+                    {"processId":"7d21bf64-3201-4545-9b86-bccd24a0129a"}
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  get:
+    description: Get the list of the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+                    {
+                       "links":[
+                          {
+                             "rel":"first",
+                             "href":"https://www.hmislynk.com/house-matching-api/matches?page=0&size=1"
+                          },
+                          {
+                             "rel":"self",
+                             "href":"https://www.hmislynk.com/house-matching-api/matches?size=1"
+                          },
+                          {
+                             "rel":"next",
+                             "href":"https://www.hmislynk.com/house-matching-api/matches?page=1&size=1"
+                          },
+                          {
+                             "rel":"last",
+                             "href":"https://www.hmislynk.com/house-matching-api/matches?page=1&size=1"
+                          }
+                       ],
+                       "content":[
+                          {
+                                "clientId":"91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
+                                "surveyScore":10,
+                                "matched":false,
+                                "surveyDate":"09-29-2016 11:05"
+                             },
+                             "housingUnitId": "b6e0ecb6-a665-4e95-847f-ec37529a53fb",
+                             "matchDate":"2016-10-07",
+                             "manualMatch":false,
+                             "inactive":false,
+                             "dateCreated":"10-25-2016 15:24",
+                             "dateUpdated":"10-25-2016 15:24",
+                             "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
+                             "links":[
+                                {
+                                   "rel":"history",
+                                   "href":"/matches/client/91dbc8c3-6df6-4702-9733-c84dd67bf1ed/status"
+                                }
+                             ]
+                          }
+                       ],
+                       "page":{
+                          "size":1,
+                          "totalElements":2,
+                          "totalPages":2
+                       }
+                    }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the proposed matche for a client_id.
+      responses:
+        200:
+          body:
+            example : |
+              {
+                    "reservation_id":"12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "dateCreated":"10-25-2016 15:24",
+                    "dateUpdated":"10-25-2016 15:24",
+                    "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
+                    "matchedStatus": "true"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the proposed match for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for updating/accepting the match for a client id.
+      body:
+        application/json:
+            example : |
+              {
+                    "reservation_id":"12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "matchedStatus": "false"
+              }
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "matched":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/scores:
+  displayName: Trigger score totalling once survey responses are ready.
+  post:
+    description: |
+      Trigger score totalling via POST. An Empty body request would suffice.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "triggered":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+      409:
+        body: 
+          example: |
+                  {
+                     "error":[
+                        {
+                           "code":"SCORE_PROCESSING_IN_PROGRESS",
+                           "message":"Score processing currently in progress."
+                        }
+                     ]
+                  }
+  get:
+    description: Get the list of clients and their survey scores.
+    responses:
+      200:
+        body:
+          example : |
+                  {
+                     "links":[
+                        {
+                           "rel":"first",
+                           "href":"http://localhost:8080/housing-matching/scores?page=0&size=20"
+                        },
+                        {
+                           "rel":"self",
+                           "href":"http://localhost:8080/housing-matching/scores"
+                        },
+                        {
+                           "rel":"next",
+                           "href":"http://localhost:8080/housing-matching/scores?page=1&size=20"
+                        },
+                        {
+                           "rel":"last",
+                           "href":"http://localhost:8080/housing-matching/scores?page=1&size=20"
+                        }
+                     ],
+                     "content":[
+                        {
+                           "clientId":"90f5b14f-08e1-4999-9ca3-ee7c82c0f054",
+                           "surveyScore":134,
+                           "programType":"PSH",
+                           "matched":false,
+                           "cocScore":12,
+                           "dateCreated":"10-25-2016 15:24",
+                           "dateUpdated":"10-25-2016 15:24",
+                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"9346eb6b-1a33-44a7-b997-4cfe516450d7",
+                           "surveyScore":247,
+                           "programType":"PSH",
+                           "matched":false,
+                           "cocScore":65,
+                           "dateCreated":"10-25-2016 15:24",
+                           "dateUpdated":"10-25-2016 15:24",
+                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"4c4e0b8e-860c-4daa-a471-a0795835326b",
+                           "surveyScore":176,
+                           "programType":"PSH",
+                           "matched":false,
+                           "dateCreated":"10-25-2016 15:24",
+                           "dateUpdated":"10-25-2016 15:24",
+                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",                           
+                           "spdatLabel":"YOUTH"
+                        },
+                        {
+                           "clientId":"0b421298-9adc-4695-bc2f-18f608d8c153",
+                           "surveyScore":128,
+                           "programType":"PSH",
+                           "matched":false,
+                           "dateCreated":"10-25-2016 15:24",
+                           "dateUpdated":"10-25-2016 15:24",
+                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",                           
+                           "spdatLabel":"YOUTH"
+                        }
+                     ],
+                     "page":{
+                        "size":20,
+                        "totalElements":31,
+                        "totalPages":2
+                     }
+                  }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the survey scores.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+/scores/status:
+  get:
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                      {
+                         "startedAt":"11-21-2016 11:09:27.371",
+                         "completedAt":"11-18-2016 17:39:24.983",
+                         "initiatedBy":"hmisprojects@gmail.com",
+                         "status":"COMPLETED"
+                      }
+/scores/history:
+  get:
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                    {
+                       "links":[
+                          {
+                             "rel":"self",
+                             "href":"http://localhost:8080/house-matching-api/bactchprocess/history"
+                          }
+                       ],
+                       "content":[
+                          {
+                             "startedAt":"11-21-2016 11:09:27.371",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"INPROGRESS",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "startedAt":"11-19-2016 22:01:54.120",
+                             "completedAt":"11-19-2016 22:02:12.037",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "startedAt":"11-19-2016 22:01:52.428",
+                             "completedAt":"11-19-2016 22:02:10.604",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "startedAt":"11-19-2016 21:57:27.882",
+                             "completedAt":"11-19-2016 21:57:45.902",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "startedAt":"11-19-2016 16:09:58.603",
+                             "completedAt":"11-19-2016 16:10:17.350",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"FAILED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "startedAt":"11-18-2016 17:39:09.075",
+                             "completedAt":"11-18-2016 17:39:24.983",
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"INPROCESS",
+                             "links":[
+                    
+                             ]
+                          },
+                          {
+                             "initiatedBy":"hmisprojects@gmail.com",
+                             "status":"COMPLETED",
+                             "links":[
+                    
+                             ]
+                          }
+                       ],
+                       "page":{
+                          "size":20,
+                          "totalElements":9,
+                          "totalPages":1,
+                          "number":0
+                       }
+                    }            
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the survey score for a client_id.
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "client_id":"12345",
+                  "survey_score": "12",
+                  "survey_type":"custom assesssment"
+                }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the survey score for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for updating survey score for a client id.
+      body:
+        application/json:
+          example: |
+            {
+              "client_id":"12345",
+              "survey_score": "12",
+              "survey_type":"custom assesssment"
+            }
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "updated":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/eligibleclients:
+  displayName: Returns a list of Top Eligible Clients
+  get:
+    description: Returns the most eligible clients.
+    queryParameters:
+        spdattype:
+          type: string
+          required: false
+        status:
+          type: string
+          required: false
+        sort:
+          description: |
+                To sort data while retrieving. Provide sorting field (if want to sort on multiple fields provide fields with comma separation) and order (asc,desc) with comma separation. 
+          example: |
+                    https://www.hmislynk.com/house-matching-api/rest/eligibleclients?sort=cocScore,surveyDate,asc
+    responses:
+      200:
+        body:
+          example : |
+                      {
+                         "links":[
+                            {
+                               "rel":"first",
+                               "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=0&size=1"
+                            },
+                            {
+                               "rel":"self",
+                               "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?size=1"
+                            },
+                            {
+                               "rel":"next",
+                               "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=1&size=1"
+                            },
+                            {
+                               "rel":"last",
+                               "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=2&size=1"
+                            },
+                            {
+                               "rel":"scoreprocessingstatus",
+                               "href":"https://www.hmislynk.com/house-matching-api/scores/status"
+                            },
+                            {
+                               "rel":"scoreprocessinghistory",
+                               "href":"https://www.hmislynk.com/house-matching-api/scores/history"
+                            }
+                         ],
+                         "content":[
+                            {
+                               "clientId":"91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
+                               "surveyScore":10,
+                               "matched":false,
+                               "surveyDate":"09-29-2016 11:05",
+                               "dateCreated":"10-25-2016 15:24",
+                               "dateUpdated":"10-25-2016 15:24",
+                               "userId":"74fe590d-9389-4936-abef-1c18fbf14750"                              
+                            }
+                         ],
+                         "page":{
+                            "size":1,
+                            "totalElements":3,
+                            "totalPages":3
+                         }
+                      }    
+          schema: |
+                    {
+                           "$schema":"http://json-schema.org/draft-04/schema#",
+                           "additionalProperties":false,
+                           "definitions":{
+
+                           },
+                           "id":"http://example.com/example.json",
+                           "properties":{
+                              "content":{
+                                 "items":{
+                                    "additionalProperties":false,
+                                    "properties":{
+                                       "clientId":{
+                                          "type":"string"
+                                       },
+                                       "dateCreated":{
+                                          "type":"string"
+                                       },
+                                       "dateUpdated":{
+                                          "type":"string"
+                                       },
+                                       "matched":{
+                                          "type":"boolean"
+                                       },
+                                       "surveyDate":{
+                                          "type":"string"
+                                       },
+                                       "surveyScore":{
+                                          "type":"integer"
+                                       },
+                                       "userId":{
+                                          "type":"string"
+                                       }
+                                    },
+                                    "required":[
+                                       "userId",
+                                       "clientId",
+                                       "dateCreated",
+                                       "surveyScore",
+                                       "dateUpdated",
+                                       "surveyDate",
+                                       "matched"
+                                    ],
+                                    "type":"object"
+                                 },
+                                 "type":"array"
+                              },
+                              "links":{
+                                 "items":{
+                                    "additionalProperties":false,
+                                    "properties":{
+                                       "href":{
+                                          "type":"string"
+                                       },
+                                       "rel":{
+                                          "type":"string"
+                                       }
+                                    },
+                                    "required":[
+                                       "href",
+                                       "rel"
+                                    ],
+                                    "type":"object"
+                                 },
+                                 "type":"array"
+                              },
+                              "page":{
+                                 "additionalProperties":false,
+                                 "properties":{
+                                    "size":{
+                                       "type":"integer"
+                                    },
+                                    "totalElements":{
+                                       "type":"integer"
+                                    },
+                                    "totalPages":{
+                                       "type":"integer"
+                                    }
+                                 },
+                                 "required":[
+                                    "totalPages",
+                                    "totalElements",
+                                    "size"
+                                 ],
+                                 "type":"object"
+                              }
+                           },
+                           "required":[
+                              "content",
+                              "page",
+                              "links"
+                           ],
+                           "type":"object"
+                        }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  post:
+    description: | 
+              Will add client to the eligible list. Accept json having one or more clients.
+              Allowed values for "spdatLabel" field are "FAMILY","YOUTH","SINGLE_ADULT"
+    body:
+      application/json:
+        example: |
+                    {
+                      "eligibleClients":[
+                          {
+                             "clientId":"80201561-f565-4ca7-9c4e-c5d8aa5a53eb",
+                             "surveyType":"Servey Type",
+                             "surveyScore":"17",
+                             "programType":"Program Type",
+                             "matched":true,
+                             "spdatLabel":"SINGLE_ADULT",
+                             "zipcode":"53320",
+                             "surveyDate":"05-05-2016 09:12",
+                             "ignoreMatchProcess":true,
+                             "remarks":"Client not interested"
+                          },
+                          {
+                             "clientId":"8315b9eb-bdd2-492c-a31e-f7b29a588452",
+                             "surveyType":"Servey Type",
+                             "surveyScore":"15",
+                             "programType":"Program Type",
+                             "matched":true,
+                             "spdatLabel":"SINGLE_ADULT",
+                             "zipcode":"53320",
+                             "surveyDate":"05-05-2016 09:12",
+                             "remarks":"Client eligible for housing unit"
+                          }
+                       ]
+                    }
+        schema: |
+                  {
+                     "$schema":"http://json-schema.org/draft-04/schema#",
+                     "definitions":{
+
+                     },
+                     "id":"http://example.com/example.json",
+                     "properties":{
+                        "eligibleClients":{
+                           "items":{
+                              "properties":{
+                                 "clientId":{
+                                    "type":"string"
+                                 },
+                                 "ignoreMatchProcess":{
+                                    "type":"boolean"
+                                 },
+                                 "matched":{
+                                    "type":"boolean"
+                                 },
+                                 "programType":{
+                                    "type":"string"
+                                 },
+                                 "remarks":{
+                                    "type":"string"
+                                 },
+                                 "spdatLabel":{
+                                    "type":"string"
+                                 },
+                                 "surveyDate":{
+                                    "type":"string"
+                                 },
+                                 "surveyScore":{
+                                    "type":"string"
+                                 },
+                                 "surveyType":{
+                                    "type":"string"
+                                 },
+                                 "zipcode":{
+                                    "type":"string"
+                                 }
+                              },
+                              "type":"object"
+                           },
+                           "type":"array"
+                        }
+                     },
+                     "type":"object"
+                  }
+    responses:
+        200:
+          body:
+            example : |
+              {
+                "added":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+
+  /{clientid}:
+    displayName: Perform operations based on client_id.
+    uriParameters:
+      clientid:
+        description: id of the client.
+        type: string
+    get:
+      description: Fetch a particular client
+      responses:
+        200:
+          body:
+            example : |
+                      {
+                         "clientId":"800fa63b-8278-414c-83f1-5e29740205a0",
+                         "surveyScore":10,
+                         "matched":false,
+                         "surveyDate":"09-03-2016 04:19",
+                           "dateCreated":"10-25-2016 15:24",
+                           "dateUpdated":"10-25-2016 15:24",
+                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",      
+                           "remarks":"Clients eligible for housing unit",   
+                            "ignoreMatchProcess":false,                
+                         "links":[
+                            {
+                               "rel":"client",
+                               "href":"/hmis-clientapi/rest/v2014/clients/800fa63b-8278-414c-83f1-5e29740205a0"
+                            }
+                         ]
+                      }
+            schema: |
+                      {
+                         "$schema":"http://json-schema.org/draft-04/schema#",
+                         "additionalProperties":false,
+                         "definitions":{
+
+                         },
+                         "id":"http://example.com/example.json",
+                         "properties":{
+                            "clientId":{
+                               "type":"string"
+                            },
+                            "dateCreated":{
+                               "type":"string"
+                            },
+                            "dateUpdated":{
+                               "type":"string"
+                            },
+                            "ignoreMatchProcess":{
+                               "type":"boolean"
+                            },
+                            "links":{
+                               "items":{
+                                  "additionalProperties":false,
+                                  "properties":{
+                                     "href":{
+                                        "type":"string"
+                                     },
+                                     "rel":{
+                                        "type":"string"
+                                     }
+                                  },
+                                  "required":[
+                                     "href",
+                                     "rel"
+                                  ],
+                                  "type":"object"
+                               },
+                               "type":"array"
+                            },
+                            "matched":{
+                               "type":"boolean"
+                            },
+                            "remarks":{
+                               "type":"string"
+                            },
+                            "surveyDate":{
+                               "type":"string"
+                            },
+                            "surveyScore":{
+                               "type":"integer"
+                            },
+                            "userId":{
+                               "type":"string"
+                            }
+                         },
+                         "required":[
+                            "links",
+                            "ignoreMatchProcess",
+                            "userId",
+                            "clientId",
+                            "dateCreated",
+                            "surveyScore",
+                            "remarks",
+                            "dateUpdated",
+                            "surveyDate",
+                            "matched"
+                         ],
+                         "type":"object"
+                      }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    delete:
+      description: Delete a particular client
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "deleted":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    put:
+      description: |
+              An eligible client, who is already matched and assigned an housing unit can reject the referral (an assigned housig unit can be rejected for various reasons). When this happens, "ignoreMatchProcess" flag will be set to "true" and the hosuing unit will become vacant (available for matching process again) An eligible client, who rejected the refferal, can be made available for matching process by setting "ignoreMatchProcess" to FALSE.
+      body:
+        application/json:
+          example: |
+                    {
+                      "clientId": "68d838fc-2797-49e6-87a2-5b1132647275",
+                      "surveyType": "Servey Type",
+                      "surveyScore": "10",
+                      "programType": "Program Type",
+                      "matched": false,
+                      "spdatLabel": "SINGLE_ADULT",
+                      "zipcode": "53320",
+                      "surveyDate": "05-05-2016 12:12",
+                      "remarks":"Client data updated"
+                    }
+          schema: |
+                  {
+                     "$schema":"http://json-schema.org/draft-04/schema#",
+                     "additionalProperties":false,
+                     "definitions":{
+                     },
+                     "id":"http://example.com/example.json",
+                     "properties":{
+                        "clientId":{
+                           "type":"string"
+                        },
+                        "matched":{
+                           "type":"boolean"
+                        },
+                        "programType":{
+                           "type":"string"
+                        },
+                        "spdatLabel":{
+                           "type":"string"
+                        },
+                        "surveyDate":{
+                           "type":"string"
+                        },
+                        "surveyScore":{
+                           "type":"string"
+                        },
+                        "surveyType":{
+                           "type":"string"
+                        },
+                        "zipcode":{
+                           "type":"string"
+                        },
+                        "remarks":{
+                          "type":"string"
+                        }
+                     },
+                     "required":[
+                        "spdatLabel",
+                        "surveyScore",
+                        "clientId",
+                        "matched"
+                     ],
+                     "type":"object"
+                  }
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "updated":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/matches/client/{clientid}/status:
+  get:
+    description:  TO read a client status history
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+                      [
+                         {
+                            "id":"ec501234-c61a-48bd-a85e-580af887a6a4",
+                            "clientId":"6f38e63f-7856-4fb1-838f-c03805eab244",
+                            "status":3,
+                            "statusDescription":"Agency scheduled appointment with Client",
+                            "recipients":{
+                      
+                            },
+                            "active":false,
+                            "dateCreated":"10-25-2016 15:24",
+                            "dateUpdated":"10-25-2016 15:24",
+                            "userId":"74fe590d-9389-4936-abef-1c18fbf14750"                         },
+                         {
+                            "id":"d406dbb7-cda3-4879-9e5d-989d5bc67b16",
+                            "clientId":"6f38e63f-7856-4fb1-838f-c03805eab244",
+                            "status":2,
+                            "statusDescription":"Client is contacted by Agency",
+                            "recipients":{
+                      
+                            },
+                            "active":false,
+                            "dateCreated":"10-13-2016 02:26:09.066",
+                            "dateUpdated":"10-13-2016 02:26:09.066",
+                            "userId":"74fe590d-9389-4936-abef-1c18fbf14750"
+                         },
+                         {
+                            "id":"d4c767bc-cb85-44f9-a985-0447292fedf6",
+                            "clientId":"6f38e63f-7856-4fb1-838f-c03805eab244",
+                            "status":1,
+                            "statusDescription":"Email sent to Referral Agency",
+                            "recipients":{
+                      
+                            },
+                            "active":false,
+                            "dateCreated":"10-13-2016 02:23:59.124",
+                            "dateUpdated":"10-13-2016 02:23:59.124",
+                            "userId":"74fe590d-9389-4936-abef-1c18fbf14750"
+                         }
+                      ]
+      404:
+        body:
+          application/json:
+            example: |
+                  {
+                     "error":[
+                        {
+                           "code":"ERR_CODE_CLIENT_NOT_FOUND",
+                           "message":"Client not found"
+                        }
+                     ]
+                  }              
+  put:
+    description: |
+          Updates the status of a client matching. A notification will be triggered to the list of recipients set in the request body (recicipents can be part of TO,CC, BCC). Also the notification will be CC'ed to logged-in user (who is authorized to take actions for status to progress to the next levels). User can provide additional comments as well while updating the status of a specific match. Currently, the following are the statuses that are allowed 
+            
+            Status 1 - Email sent to Referral Agency 
+            Status 2 - Client is contacted by Agency
+            Status 3 - Agency scheduled appointment with Client
+            Status 4 - Client missed 1st appointment
+            Status 5 - Client missed 2nd appointment
+            Status 6 - Paperwork initiated by Agency
+            Status 7 - Client accepted referral
+            Status 8 - Move-in Preparation initiated by Agency
+            Status 9 - Client moved in
+            Status 10 - Referral is rejected
+           
+    body:
+      application/json:
+        example: |
+            {
+               "status":"1",
+               "comments":"forwarding to next level",
+               "recipients":[
+                   "toRecipients" : [ "agent@gmail.com", "client@hmis.com"],
+                   "bccRecipients" : [ "agent@gmail.com", "client@hmis.com"],
+                   "ccRecipients" : [ "agent@gmail.com", "client@hmis.com"]
+               ]
+            }              
+        schema: |
+                  {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "comments": {
+                      "type": "string"
+                    },
+                    "recipients": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "comments",
+                    "recipients"
+                  ]
+                  }
+    responses:
+      200:
+      404:
+        body:
+          application/json:
+            example: |
+                  {
+                     "error":[
+                        {
+                           "code":"ERR_CODE_CLIENT_NOT_FOUND",
+                           "message":"Client not found"
+                        }
+                     ]
+                  }
+      400:
+        body:
+          application/json:
+            example: |
+                  {
+                     "error":[
+                        {
+                           "code":"ERR_CODE_INVALID_STATUS",
+                           "message":"Invalid status. Current status 1"
+                        }
+                     ]
+                  }
+/matches/{reservationid}/statuses:
+  get:
+    description: Get match reservation status update history.
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                        [
+                         {
+                            "id":"2f083691-b276-497e-82b9-30d8246d16ae",
+                            "clientId":"d2d07514-073c-43e7-9da8-517e74601ac6",
+                            "status":0,
+                            "statusDescription":"Client is surveyed",
+                            "comments":"Housing unit assigned through match process",
+                            "recipients":{
+                               "toRecipients":[
+                      
+                               ],
+                               "bccRecipients":[
+                      
+                               ],
+                               "ccRecipients":[
+                      
+                               ]
+                            },
+                            "active":false,
+                            "dateCreated":"03-06-2017 13:27:15.581",
+                            "dateUpdated":"03-06-2017 13:27:15.581"
+                         },
+                         {
+                            "id":"d4c01c14-1bb6-45a7-add2-e634d53a90c6",
+                            "status":1,
+                            "statusDescription":"Email sent to Referral Agency",
+                            "comments":"Status updating",
+                            "recipients":{
+                               "toRecipients":[
+                      
+                               ],
+                               "bccRecipients":[
+                      
+                               ],
+                               "ccRecipients":[
+                      
+                               ]
+                            },
+                            "active":false,
+                            "dateCreated":"03-06-2017 13:47:56.570",
+                            "dateUpdated":"03-06-2017 13:47:56.570"
+                            ]
+                         },
+                         {
+                            "id":"ddded72c-d577-44c6-bd2e-9051f00a555c",
+                            "status":2,
+                            "statusDescription":"Client is contacted by Agency",
+                            "comments":"Status updating",
+                            "recipients":{
+                               "toRecipients":[
+                      
+                               ],
+                               "bccRecipients":[
+                      
+                               ],
+                               "ccRecipients":[
+                      
+                               ]
+                            },
+                            "active":false,
+                            "dateCreated":"03-07-2017 20:04:54.171",
+                            "dateUpdated":"03-07-2017 20:04:54.171",
+                            "notes":[
+                               {
+                                  "noteId":"e5583d2a-7515-4ef2-9614-7c24a061f119",
+                                  "note":"Adding test note.",
+                                  "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                  "noteDate":"03-07-2017 20:04:55.692"
+                               }
+                            ]
+                         }
+                        ]
+/matches/{reservationid}/statuses/{statuscode}/notes:
+  post:
+    description: Add notes for a match reservation for a specific status.
+        This API allows to add notes only for the statuses that the match reservation already moved in to. If the match reservation never enters the status, the API returns an error response with a 404 response code.
+    body: 
+      application/json:
+        example: |
+                  {
+                   "note":"Adding test note."
+                  }
+    responses: 
+      200:
+       body: 
+         application/json:
+           example: 
+      404:
+        body: 
+          application/json:
+            example: |
+                    {
+                      "errors": [
+                        {
+                          "code": "STATUS_NOT_FOUND",
+                          "message": "Status not found for the specified reservation"
+                        }
+                      ]
+                    }
+  get:
+    description: Retrieve list of notes of a match reservation for a specific status.
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                      {
+                           "links":[
+                              {
+                                 "rel":"self",
+                                 "href":"https://www.hmislynk.com/house-matching-api/matches/8814b3aa-64c7-427b-8e49-6a5bfa0b3191/statuses/1/notes"
+                              }
+                           ],
+                           "content":[
+                              {
+                                 "noteId":"5ea946d2-8c7b-4639-b489-f54985599395",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-07-2017 20:05:01.615",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"2366cad2-967e-42e5-9894-cd925959b251",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-07-2017 20:04:24.050",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"56ff13ae-e2e2-4fe0-998e-017ddd575489",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-07-2017 07:16:42.478",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"b18b089b-366d-440b-9e2f-ab3c6dd3a2b7",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:44:56.206",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"2ffe346f-4080-4b8e-8aa3-1d24cdcc4ec2",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:43:03.847",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"968dae99-9cdb-405e-87b9-7058034526eb",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:41:33.279",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"8b470cb4-f373-4a14-9632-2ea6ae9a7e84",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:32:46.863",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"4e3335f8-c47c-41da-8675-f432d3a6cc06",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:31:07.007",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"b6edc42a-69c4-4f9f-ba48-c89ea67cfe7d",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 14:27:55.465",
+                                 "links":[
+                        
+                                 ]
+                              },
+                              {
+                                 "noteId":"4ef05328-003d-4ac5-8104-a5f457a65716",
+                                 "note":"Adding test note.",
+                                 "userId":"8b6c6ef2-87c7-47f0-8874-4cca6f09365c",
+                                 "noteDate":"03-06-2017 13:47:57.825",
+                                 "links":[
+                        
+                                 ]
+                              }
+                           ],
+                           "page":{
+                              "size":50,
+                              "totalElements":10,
+                              "totalPages":1,
+                              "number":0
+                           }
+                        }
+/matches/{reservationid}/statuses/{statuscode}/notes/{noteid}:
+  delete:
+    description: Delete a status note for a specific status, for a specific reservation. 
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                    
+/matchprocesslog:
+  get:
+    queryParameters: 
+      processid:
+        type: string
+        required: false
+        description: Process Id of batch process
+      clientid:
+        type: string
+        required: false
+        description: Client Id
+      projectid:
+        type: string
+        required: false
+        description: Project Id
+      housingunitid:
+        type: string
+        required: false
+        description: Housing Unit Id
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                      {
+                         "links":[
+                            {
+                               "rel":"first",
+                               "href":"https://www.hmislynk.com/house-matching-api/matchprocesslog?processid=24f006b5-e8c8-4212-944e-927622f1084c&page=0&size=20&sort=dateCreated,asc"
+                            },
+                            {
+                               "rel":"self",
+                               "href":"https://www.hmislynk.com/house-matching-api/matchprocesslog?processid=24f006b5-e8c8-4212-944e-927622f1084c"
+                            },
+                            {
+                               "rel":"next",
+                               "href":"https://www.hmislynk.com/house-matching-api/matchprocesslog?processid=24f006b5-e8c8-4212-944e-927622f1084c&page=1&size=20&sort=dateCreated,asc"
+                            },
+                            {
+                               "rel":"last",
+                               "href":"https://www.hmislynk.com/house-matching-api/matchprocesslog?processid=24f006b5-e8c8-4212-944e-927622f1084c&page=11&size=20&sort=dateCreated,asc"
+                            }
+                         ],
+                         "content":[
+                            {
+                               "id":"ef51abec-93dd-4161-b736-790d0dd2fa04",
+                               "statusMessage":"SUCCESS - 94 housing unit(s) loaded",
+                               "step":"FETCH vacant housing units.",
+                               "status":true,
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"4b64f318-106d-420e-943e-c2904a1dd739",
+                               "statusMessage":"SUCCESS - Housing Unit Id # 29763e10-7a37-4f64-93e3-ee050a45cec1 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"1# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"29763e10-7a37-4f64-93e3-ee050a45cec1",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"70e95dba-ce4e-46d1-b4f6-9aaa2091e68a",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : 29763e10-7a37-4f64-93e3-ee050a45cec1",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"29763e10-7a37-4f64-93e3-ee050a45cec1",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"75c47685-3f94-4841-aa24-21955974e37f",
+                               "statusMessage":"SUCCESS - Housing Unit Id # f5562e73-0fec-4315-8155-ae6e68e846cc , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"2# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"f5562e73-0fec-4315-8155-ae6e68e846cc",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"a7928150-1bd6-4799-b2ca-eac5df5a56ac",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : f5562e73-0fec-4315-8155-ae6e68e846cc",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"f5562e73-0fec-4315-8155-ae6e68e846cc",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"8236da1f-8e76-4e54-9e6e-3b74d7ad2e73",
+                               "statusMessage":"SUCCESS - Housing Unit Id # e5222db1-a1fc-43c7-981d-2cfdb9a5669c , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"3# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"e5222db1-a1fc-43c7-981d-2cfdb9a5669c",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"08fa9650-a09e-4a91-afd8-93129e1af0ef",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : e5222db1-a1fc-43c7-981d-2cfdb9a5669c",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"e5222db1-a1fc-43c7-981d-2cfdb9a5669c",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"2febc039-cacb-4b92-96b5-f8484af8979c",
+                               "statusMessage":"SUCCESS - Housing Unit Id # c43b6d66-57fe-451b-b8d5-3b962c63fb06 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"4# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"c43b6d66-57fe-451b-b8d5-3b962c63fb06",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"07dc14c8-e500-4105-9a09-9503949558d4",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : c43b6d66-57fe-451b-b8d5-3b962c63fb06",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"c43b6d66-57fe-451b-b8d5-3b962c63fb06",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"acca932a-fa66-4e86-8e98-35a532e7bf6b",
+                               "statusMessage":"SUCCESS - Housing Unit Id # dd7a106c-1439-4cf9-a51d-650094bb05e3 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"5# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"dd7a106c-1439-4cf9-a51d-650094bb05e3",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"4c1607d3-9f3a-4324-b25d-ea744c950683",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : dd7a106c-1439-4cf9-a51d-650094bb05e3",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"dd7a106c-1439-4cf9-a51d-650094bb05e3",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"ecf6b322-f63e-40a1-b7a3-209feff8b049",
+                               "statusMessage":"SUCCESS - Housing Unit Id # 533ca01f-5280-4849-8fa9-715133fb7228 , Hosing Unit Type # FAMILY",
+                               "step":"6# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"533ca01f-5280-4849-8fa9-715133fb7228",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"d2f5e74a-efde-4322-9c70-354f2662fe5d",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : 533ca01f-5280-4849-8fa9-715133fb7228",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"533ca01f-5280-4849-8fa9-715133fb7228",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"7a5f12b4-4f54-4a81-80eb-e10941deaca4",
+                               "statusMessage":"SUCCESS - Housing Unit Id # b12738bd-3cac-4cc5-b1ea-cac103c4a1b1 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"7# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"b12738bd-3cac-4cc5-b1ea-cac103c4a1b1",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"759766ad-20d2-4ea6-a4ce-398923c92eb8",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : b12738bd-3cac-4cc5-b1ea-cac103c4a1b1",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"b12738bd-3cac-4cc5-b1ea-cac103c4a1b1",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"d57266cd-bee1-4aa8-8ae9-25b05f060b45",
+                               "statusMessage":"SUCCESS - Housing Unit Id # bbda59a3-00bb-4cc8-877d-0593544fd671 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"8# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"bbda59a3-00bb-4cc8-877d-0593544fd671",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"9f69d5cd-0c15-45cd-8e50-725e3334c320",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : bbda59a3-00bb-4cc8-877d-0593544fd671",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"bbda59a3-00bb-4cc8-877d-0593544fd671",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"45fecaac-b61e-492b-9d49-7bd07e613953",
+                               "statusMessage":"SUCCESS - Housing Unit Id # 053a3cda-f664-446a-9625-e01e89b57692 , Hosing Unit Type # SINGLE_ADULT",
+                               "step":"9# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"053a3cda-f664-446a-9625-e01e89b57692",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"05b362ee-95a6-42b9-a9d7-b0a3dd44a331",
+                               "statusMessage":"FAILED - Project information loaded for housing unit : 053a3cda-f664-446a-9625-e01e89b57692",
+                               "step":"FETCH Project information for housing unit",
+                               "additionalInfo":{
+                                  "projectType":"Project not found in HMIS"
+                               },
+                               "status":false,
+                               "housingUnitId":"053a3cda-f664-446a-9625-e01e89b57692",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            },
+                            {
+                               "id":"8e65aecf-5fe3-44aa-b7e1-b3e25b959473",
+                               "statusMessage":"SUCCESS - Housing Unit Id # c09f3872-304c-42a0-8f76-75c9282a1a24 , Hosing Unit Type # FAMILY",
+                               "step":"10# START processing housing unit",
+                               "status":true,
+                               "housingUnitId":"c09f3872-304c-42a0-8f76-75c9282a1a24",
+                               "processId":"24f006b5-e8c8-4212-944e-927622f1084c",
+                               "links":[
+                      
+                               ]
+                            }
+                         ],
+                         "page":{
+                            "size":20,
+                            "totalElements":223,
+                            "totalPages":12,
+                            "number":0
+                         }
+                      }     
+      400:
+        body: 
+          application/json:
+            example: |
+                      {
+                         "error":[
+                            {
+                               "code":"ERR_CODE_PARAMETER_MISSING",
+                               "message":"ProcessId or HousingUnitId or ProjectId or ClientId required"
+                            }
+                         ]
+                      }
+/matchstatuses/{statuscode}/reasons:
+  get:
+    description: | 
+               Returns the list of possible remarks for the match to come to this status. API returns an empty array if there are no pre-defined list of reasons / remarks that the user can pick from.
+
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+                    {
+                     "links":[
+                        {
+                           "rel":"self",
+                           "href":"https://www.hmislynk.com/house-matching-api/matchstatuses/10/remarks"
+                        }
+                     ],
+                     "content":[
+                        {
+                           "statusCode":10,
+                           "reason":"Client disengaged",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Client opted out due to extenuating circumstances",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Household represents more or fewer people than the unit is designed for in line with housing standards",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Client opted out absent extenuating circumstances",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"There are no appropriate vacancies available",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Individual indicates unwillingness to comply with sober living requirements",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"The individual or family is not eligible under funding source",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"The program lacks resources needed to effectively and safely support the client and his/her family",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"FOR TRANSITIONAL HOUSING ONLY: Client was in another TH project within the last two years",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Client missed 2 or more appointments",
+                           "links":[
+                  
+                           ]
+                        },
+                        {
+                           "statusCode":10,
+                           "reason":"Agency/Client conflict of interest",
+                           "links":[
+                  
+                           ]
+                        }
+                     ],
+                     "page":{
+                     ],
+                     "page":{
+                        "size":50,
+                        "totalElements":11,
+                        "totalPages":1,
+                        "number":0
+                     }
+                    }
