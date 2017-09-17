@@ -1,4 +1,4 @@
-#%RAML 0.8
+#%RAML 1.0
 title: Housing Matching Service
 version: 0.2.1
 baseUri: https://mocksvc.mulesoft.com/mocks/d380eab8-f7d0-48a4-804b-c816753b395a/api/{version}
@@ -1806,6 +1806,7 @@ mediaType: application/json
                                "dateUpdated":"10-25-2016 15:24",
                                "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
                                 "client":{
+                                        "id":"91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
                                          "firstName":"Ryan",
                                          "middleName":"",
                                          "lastName":"Peterson",
@@ -1853,6 +1854,9 @@ mediaType: application/json
                                        "client":{
                                           "type":"object",
                                           "properties":{
+                                             "id":{
+                                                "type":"string"
+                                             },
                                              "firstName":{
                                                 "type":"string"
                                              },
@@ -1949,6 +1953,7 @@ mediaType: application/json
                         "remarks":"Clients eligible for housing unit",   
                         "ignoreMatchProcess":false,
                         "client":{
+                          "id":"800fa63b-8278-414c-83f1-5e29740205a0",
                           "firstName":"Ryan",
                           "middleName":"",
                           "lastName":"Peterson",
@@ -1982,6 +1987,9 @@ mediaType: application/json
                             "client":{
                               "type":"object",
                               "properties":{
+                                "id":{
+                                    "type":"string"
+                                },
                                 "firstName":{
                                   "type":"string"
                                 },
