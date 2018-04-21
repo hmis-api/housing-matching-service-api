@@ -1,0 +1,672 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Housing Matching Service",
+    "version": "3.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.hmislynk.com/house-matching-api/v3"
+    }
+  ],
+  "paths": {
+    "/matches": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "links": [
+                      {
+                        "rel": "first",
+                        "href": "https://www.hmislynk.com/house-matching-api/matches?page=0&size=1"
+                      },
+                      {
+                        "rel": "self",
+                        "href": "https://www.hmislynk.com/house-matching-api/matches?size=1"
+                      },
+                      {
+                        "rel": "next",
+                        "href": "https://www.hmislynk.com/house-matching-api/matches?page=1&size=1"
+                      },
+                      {
+                        "rel": "last",
+                        "href": "https://www.hmislynk.com/house-matching-api/matches?page=1&size=1"
+                      }
+                    ],
+                    "content": [
+                      {
+                        "reservationId": "f396b640-faf6-4f2f-98db-26a0c84c8e4f",
+                        "eligibleClients": {
+                          "clientId": "91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
+                          "surveyScore": 10,
+                          "matched": false,
+                          "surveyDate": "09-29-2016 11:05",
+                          "dedupClientId": "5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8"
+                        },
+                        "housingUnitId": "b6e0ecb6-a665-4e95-847f-ec37529a53fb",
+                        "matchDate": "2016-10-07",
+                        "manualMatch": false,
+                        "inactive": false,
+                        "dateCreated": "10-25-2016 15:24",
+                        "dateUpdated": "10-25-2016 15:24",
+                        "userId": "74fe590d-9389-4936-abef-1c18fbf14750",
+                        "links": [
+                          {
+                            "rel": "history",
+                            "href": "/matches/client/91dbc8c3-6df6-4702-9733-c84dd67bf1ed/status"
+                          }
+                        ]
+                      }
+                    ],
+                    "page": {
+                      "size": 1,
+                      "totalElements": 2,
+                      "totalPages": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Get the list of the proposed matches.",
+        "operationId": "GET_matches"
+      }
+    },
+    "/matches/client/{dedupClientId}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "reservation_id": "12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "dateCreated": "10-25-2016 15:24",
+                    "dateUpdated": "10-25-2016 15:24",
+                    "userId": "74fe590d-9389-4936-abef-1c18fbf14750",
+                    "matchedStatus": "true"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Get the proposed matche for a client_id.",
+        "operationId": "GET_matches-client-dedupClientId"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "deleted": "ok"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Clears off the proposed match for a particular client.\n",
+        "operationId": "DELETE_matches-client-dedupClientId"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "matched": "ok"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Used for updating/accepting the match for a client id.\n",
+        "operationId": "PUT_matches-client-dedupClientId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "reservationAdults": "0",
+                "reservationChildren": "2"
+              },
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "parameters": [
+        {
+          "name": "dedupClientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "id of the client."
+        }
+      ]
+    },
+    "/eligibleclients": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "{\n   \"links\":[\n      {\n         \"rel\":\"first\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/eligibleclients?page=0&size=1\"\n      },\n      {\n         \"rel\":\"self\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/eligibleclients?size=1\"\n      },\n      {\n         \"rel\":\"next\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/eligibleclients?page=1&size=1\"\n      },\n      {\n         \"rel\":\"last\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/eligibleclients?page=2&size=1\"\n      },\n      {\n         \"rel\":\"scoreprocessingstatus\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/scores/status\"\n      },\n      {\n         \"rel\":\"scoreprocessinghistory\",\n         \"href\":\"https://www.hmislynk.com/house-matching-api/scores/history\"\n      }\n   ],\n   \"content\":[\n      {\n         \"clientId\":\"91dbc8c3-6df6-4702-9733-c84dd67bf1ed\",\n         \"surveyScore\":10,\n         \"matched\":false,\n         \"surveyDate\":\"09-29-2016 11:05\",\n         \"dateCreated\":\"10-25-2016 15:24\",\n         \"dateUpdated\":\"10-25-2016 15:24\",\n         \"userId\":\"74fe590d-9389-4936-abef-1c18fbf14750\",\n          \"client\":{\n                  \"id\":\"91dbc8c3-6df6-4702-9733-c84dd67bf1ed\",\n                   \"firstName\":\"Ryan\",\n                   \"middleName\":\"\",\n                   \"lastName\":\"Peterson\",\n                   \"dob\":339989400000,\n                   \"dedupClientId\":\"5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8\"\n                }\n          }\n   ],\n   \"page\":{\n      \"size\":1,\n      \"totalElements\":3,\n      \"totalPages\":3\n   }\n}\ntype: |\n        {\n               \"$schema\":\"http://json-schema.org/draft-04/schema#\",\n               \"additionalProperties\":false,\n               \"id\":\"http://example.com/example.json\",\n               \"properties\":{\n                  \"content\":{\n                     \"items\":{\n                        \"additionalProperties\":false,\n                        \"properties\":{\n                           \"clientId\":{\n                              \"type\":\"string\"\n                           },\n                           \"dateCreated\":{\n                              \"type\":\"string\"\n                           },\n                           \"dateUpdated\":{\n                              \"type\":\"string\"\n                           },\n                           \"matched\":{\n                              \"type\":\"boolean\"\n                           },\n                           \"surveyDate\":{\n                              \"type\":\"string\"\n                           },\n                           \"surveyScore\":{\n                              \"type\":\"integer\"\n                           },\n                           \"userId\":{\n                              \"type\":\"string\"\n                           },\n                           \"client\":{\n                              \"type\":\"object\",\n                              \"properties\":{\n                                 \"id\":{\n                                    \"type\":\"string\"\n                                 },\n                                 \"firstName\":{\n                                    \"type\":\"string\"\n                                 },\n                                 \"middleName\":{\n                                    \"type\":\"string\"\n                                 },\n                                 \"lastName\":{\n                                    \"type\":\"string\"\n                                 },\n                                 \"dob\":{\n                                    \"type\":\"number\"\n                                 }\n                              }\n                         }\n                        },\n\n                        \"type\":\"object\"\n                     },\n                     \"type\":\"array\"\n                  },\n                  \"links\":{\n                     \"items\":{\n                        \"additionalProperties\":false,\n                        \"properties\":{\n                           \"href\":{\n                              \"type\":\"string\"\n                           },\n                           \"rel\":{\n                              \"type\":\"string\"\n                           }\n                        },\n                        \"required\":[\n                           \"href\",\n                           \"rel\"\n                        ],\n                        \"type\":\"object\"\n                     },\n                     \"type\":\"array\"\n                  },\n                  \"page\":{\n                     \"additionalProperties\":false,\n                     \"properties\":{\n                        \"size\":{\n                           \"type\":\"integer\"\n                        },\n                        \"totalElements\":{\n                           \"type\":\"integer\"\n                        },\n                        \"totalPages\":{\n                           \"type\":\"integer\"\n                        }\n                     },\n                     \"required\":[\n                        \"totalPages\",\n                        \"totalElements\",\n                        \"size\"\n                     ],\n                     \"type\":\"object\"\n                  }\n               },\n               \"required\":[\n                  \"content\",\n                  \"page\",\n                  \"links\"\n               ],\n               \"type\":\"object\"\n            }\n"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns a list of the top eligible clients.",
+        "operationId": "GET_eligibleclients",
+        "parameters": [
+          {
+            "name": "spdattype",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": true,
+            "description": "To sort data while retrieving. Provide sorting field (if want to sort on multiple fields provide fields with comma separation) and order (asc,desc) with comma separation.\n",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "added": true
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Will add client to the eligible list. Accept json having one or more clients.\nAllowed values for \"spdatLabel\" field are \"FAMILY\",\"YOUTH\",\"SINGLE_ADULT\"\n",
+        "operationId": "POST_eligibleclients",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "clientDedupId": "74520590-3eb3-11e7-85e4-06c37be0e663",
+                "surveyType": "Servey Type",
+                "surveyScore": "17",
+                "programType": "Program Type",
+                "matched": true,
+                "spdatLabel": "SINGLE_ADULT",
+                "zipcode": "53320",
+                "surveyDate": "05-05-2016 09:12",
+                "ignoreMatchProcess": true,
+                "remarks": "Client not interested"
+              },
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/eligibleclients/{dedupClientId}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "clientId": "800fa63b-8278-414c-83f1-5e29740205a0",
+                  "surveyScore": 10,
+                  "matched": false,
+                  "surveyDate": "09-03-2016 04:19",
+                  "dateCreated": "10-25-2016 15:24",
+                  "dateUpdated": "10-25-2016 15:24",
+                  "userId": "74fe590d-9389-4936-abef-1c18fbf14750",
+                  "remarks": "Clients eligible for housing unit",
+                  "ignoreMatchProcess": false,
+                  "client": {
+                    "id": "800fa63b-8278-414c-83f1-5e29740205a0",
+                    "firstName": "Ryan",
+                    "middleName": "",
+                    "lastName": "Peterson",
+                    "dob": 339989400000,
+                    "dedupClientId": "5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8"
+                  },
+                  "links": [
+                    {
+                      "rel": "client",
+                      "href": "/hmis-clientapi/rest/v2014/clients/800fa63b-8278-414c-83f1-5e29740205a0"
+                    }
+                  ]
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/{\n   \"$schema\":\"http://json-schema.org/draft-04/schema#\",\n   \"additionalProperties\":false,\n   \"id\":\"http://example.com/example.json\",\n   \"properties\":{\n      \"clientId\":{\n         \"type\":\"string\"\n      },\n      \"dateCreated\":{\n         \"type\":\"string\"\n      },\n      \"dateUpdated\":{\n         \"type\":\"string\"\n      },\n      \"ignoreMatchProcess\":{\n         \"type\":\"boolean\"\n      },\n      \"client\":{\n        \"type\":\"object\",\n        \"properties\":{\n          \"id\":{\n              \"type\":\"string\"\n          },\n          \"firstName\":{\n            \"type\":\"string\"\n          },\n          \"middleName\":{\n            \"type\":\"string\"\n          },\n          \"lastName\":{\n            \"type\":\"string\"\n          },\n          \"dob\":{\n            \"type\":\"number\"\n          }\n        }\n      },\n      \"links\":{\n         \"items\":{\n            \"additionalProperties\":false,\n            \"properties\":{\n               \"href\":{\n                  \"type\":\"string\"\n               },\n               \"rel\":{\n                  \"type\":\"string\"\n               }\n            },\n            \"required\":[\n               \"href\",\n               \"rel\"\n            ],\n            \"type\":\"object\"\n         },\n         \"type\":\"array\"\n      },\n      \"matched\":{\n         \"type\":\"boolean\"\n      },\n      \"remarks\":{\n         \"type\":\"string\"\n      },\n      \"surveyDate\":{\n         \"type\":\"string\"\n      },\n      \"surveyScore\":{\n         \"type\":\"integer\"\n      },\n      \"userId\":{\n         \"type\":\"string\"\n      }\n   },\n   \"type\":\"object\"\n}\n"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Resource Not Found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Fetch a particular client",
+        "operationId": "GET_eligibleclients-dedupClientId"
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "deleted": true
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Resource Not Found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Delete a particular client",
+        "operationId": "DELETE_eligibleclients-dedupClientId"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "updated": true
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "Token Not Valid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "An eligible client, who is already matched and assigned an housing unit can reject the referral (an assigned housig unit can be rejected for various reasons). When this happens, \"ignoreMatchProcess\" flag will be set to \"true\" and the hosuing unit will become vacant (available for matching process again) An eligible client, who rejected the refferal, can be made available for matching process by setting \"ignoreMatchProcess\" to FALSE.\n",
+        "operationId": "PUT_eligibleclients-dedupClientId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "surveyType": "Servey Type",
+                "surveyScore": "10",
+                "programType": "Program Type",
+                "matched": false,
+                "spdatLabel": "SINGLE_ADULT",
+                "zipcode": "53320",
+                "surveyDate": "05-05-2016 12:12",
+                "remarks": "Client data updated"
+              },
+              "schema": {
+                "$ref": "#/components/schemas/{\n   \"$schema\":\"http://json-schema.org/draft-04/schema#\",\n   \"additionalProperties\":false,\n   \"id\":\"http://example.com/example.json\",\n   \"properties\":{\n      \"matched\":{\n         \"type\":\"boolean\"\n      },\n      \"programType\":{\n         \"type\":\"string\"\n      },\n      \"spdatLabel\":{\n         \"type\":\"string\"\n      },\n      \"surveyDate\":{\n         \"type\":\"string\"\n      },\n      \"surveyScore\":{\n         \"type\":\"string\"\n      },\n      \"surveyType\":{\n         \"type\":\"string\"\n      },\n      \"zipcode\":{\n         \"type\":\"string\"\n      },\n      \"remarks\":{\n        \"type\":\"string\"\n      }\n   },\n   \"required\":[\n      \"spdatLabel\",\n      \"surveyScore\",\n      \"matched\"\n   ],\n   \"type\":\"object\"\n}\n"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "parameters": [
+        {
+          "name": "dedupClientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "id of the client."
+        }
+      ]
+    },
+    "/matches/client/{dedupClientId}/status": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": [
+                    {
+                      "id": "ec501234-c61a-48bd-a85e-580af887a6a4",
+                      "clientId": "6f38e63f-7856-4fb1-838f-c03805eab244",
+                      "dedupClientId": "5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8",
+                      "status": 3,
+                      "statusDescription": "Agency scheduled appointment with Client",
+                      "recipients": {},
+                      "active": false,
+                      "dateCreated": "10-25-2016 15:24",
+                      "dateUpdated": "10-25-2016 15:24",
+                      "userId": "74fe590d-9389-4936-abef-1c18fbf14750"
+                    },
+                    {
+                      "id": "d406dbb7-cda3-4879-9e5d-989d5bc67b16",
+                      "clientId": "6f38e63f-7856-4fb1-838f-c03805eab244",
+                      "dedupClientId": "5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8",
+                      "status": 2,
+                      "statusDescription": "Client is contacted by Agency",
+                      "recipients": {},
+                      "active": false,
+                      "dateCreated": "10-13-2016 02:26:09.066",
+                      "dateUpdated": "10-13-2016 02:26:09.066",
+                      "userId": "74fe590d-9389-4936-abef-1c18fbf14750"
+                    },
+                    {
+                      "id": "d4c767bc-cb85-44f9-a985-0447292fedf6",
+                      "clientId": "6f38e63f-7856-4fb1-838f-c03805eab244",
+                      "dedupClientId": "5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8",
+                      "status": 1,
+                      "statusDescription": "Email sent to Referral Agency",
+                      "recipients": {},
+                      "active": false,
+                      "dateCreated": "10-13-2016 02:23:59.124",
+                      "dateUpdated": "10-13-2016 02:23:59.124",
+                      "userId": "74fe590d-9389-4936-abef-1c18fbf14750"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": [
+                      {
+                        "code": "ERR_CODE_CLIENT_NOT_FOUND",
+                        "message": "Client not found"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "TO read a client status history",
+        "operationId": "GET_matches-client-dedupClientId-status"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": [
+                      {
+                        "code": "ERR_CODE_INVALID_STATUS",
+                        "message": "Invalid status. Current status 1"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": [
+                      {
+                        "code": "ERR_CODE_CLIENT_NOT_FOUND",
+                        "message": "Client not found"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Updates the status of a client matching. A notification will be triggered to the list of recipients set in the request body (recicipents can be part of TO,CC, BCC). Also the notification will be CC'ed to logged-in user (who is authorized to take actions for status to progress to the next levels). User can provide additional comments as well while updating the status of a specific match. Currently, the following are the statuses that are allowed\n\n  Status 1 - Email sent to Referral Agency\n  Status 2 - Client is contacted by Agency\n  Status 3 - Agency scheduled appointment with Client\n  Status 4 - Client missed 1st appointment\n  Status 5 - Client missed 2nd appointment\n  Status 6 - Paperwork initiated by Agency\n  Status 7 - Client accepted referral\n  Status 8 - Move-in Preparation initiated by Agency\n  Status 9 - Client moved in\n  Status 10 - Referral is rejected\n",
+        "operationId": "PUT_matches-client-dedupClientId-status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "status": "1",
+                "comments": "forwarding to next level",
+                "recipients": {
+                  "toRecipients": [
+                    "agent@gmail.com",
+                    "client@hmis.com"
+                  ],
+                  "bccRecipients": [
+                    "agent@gmail.com",
+                    "client@hmis.com"
+                  ],
+                  "ccRecipients": [
+                    "agent@gmail.com",
+                    "client@hmis.com"
+                  ]
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"string\"\n    },\n    \"comments\": {\n      \"type\": \"string\"\n    },\n    \"recipients\": {\n      \"type\" : \"object\",\n      \"properties\": {\n        \"toRecipients\" : {\"type\" : \"array\"},\n        \"bccRecipients\" : {\"type\" : \"array\"},\n        \"ccRecipients\" : {\"type\" : \"array\"}\n      }\n    }\n  },\n  \"required\": [\n    \"status\",\n    \"comments\",\n    \"recipients\"\n  ]\n}\n"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "parameters": [
+        {
+          "name": "dedupClientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "parameters": {},
+    "examples": {},
+    "requestBodies": {},
+    "headers": {},
+    "securitySchemes": {
+      "oauth_2_0": {
+        "description": "The HMIS API supports OAuth 2.0 for authenticating all API requests.\n",
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "tokenUrl": "https://hmislynk.com/hmis-authorization-service/rest/token",
+            "scopes": {
+              "user": "",
+              "administrator": ""
+            }
+          }
+        }
+      }
+    },
+    "links": {},
+    "callbacks": {}
+  }
+}
