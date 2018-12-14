@@ -3,9 +3,9 @@ info:
   title: Housing Matching Service
   version: 3.0.0
 servers:
-  - url: 'https://www.hmislynk.com/house-matching-api/v3'
+  - url: 'https://www.hslynk.com/house-matching-api/'
 paths:
-  /matches:
+  /v3/matches:
     get:
       responses:
         '200':
@@ -14,41 +14,96 @@ paths:
             application/json:
               schema:
                 example:
-                  links:
+                    links:
                     - rel: first
-                      href: >-
-                        https://www.hmislynk.com/house-matching-api/matches?page=0&size=1
+                      href: https://www.hslynk.com/house-matching-api/v3/matches?page=0&size=20
                     - rel: self
-                      href: >-
-                        https://www.hmislynk.com/house-matching-api/matches?size=1
+                      href: https://www.hslynk.com/house-matching-api/v3/matches
                     - rel: next
-                      href: >-
-                        https://www.hmislynk.com/house-matching-api/matches?page=1&size=1
+                      href: https://www.hslynk.com/house-matching-api/v3/matches?page=1&size=20
                     - rel: last
-                      href: >-
-                        https://www.hmislynk.com/house-matching-api/matches?page=1&size=1
-                  content:
-                    - reservationId: f396b640-faf6-4f2f-98db-26a0c84c8e4f
+                      href: https://www.hslynk.com/house-matching-api/v3/matches?page=3&size=20
+                    content:
+                    - reservationId: a8d6e4b6-cac6-4e01-9d81-1abf1b361141
                       eligibleClients:
-                        clientId: 91dbc8c3-6df6-4702-9733-c84dd67bf1ed
-                        surveyScore: 10
-                        matched: false
-                        surveyDate: '09-29-2016 11:05'
-                        dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
-                      housingUnitId: b6e0ecb6-a665-4e95-847f-ec37529a53fb
-                      matchDate: '2016-10-07'
+                        clientId: 37c1ddf1-1d09-437e-8a01-af3801049c43
+                        surveyScore: 5
+                        programType: '2'
+                        matched: true
+                        surveyDate: 2016-12-20 00:00
+                        spdatLabel: SINGLE_ADULT
+                        dateCreated: 2016-12-20 07:51
+                        dateUpdated: 2017-02-18 18:56
+                        ignoreMatchProcess: false
+                        remarks: Ignore match flag auto set by system to false
+                        bonusScore: 0
+                        totalScore: 5
+                      housingUnitId: 3bc26f92-11c9-4fd8-a33a-bba98859e14d
+                      matchDate: '2016-12-20'
+                      matchStatus: 0
                       manualMatch: false
-                      inactive: false
-                      dateCreated: '10-25-2016 15:24'
-                      dateUpdated: '10-25-2016 15:24'
-                      userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                      dateCreated: 2016-12-20 08:33
+                      dateUpdated: 2016-12-20 08:33
                       links:
-                        - rel: history
-                          href: /matches/client/91dbc8c3-6df6-4702-9733-c84dd67bf1ed/status
-                  page:
-                    size: 1
-                    totalElements: 2
-                    totalPages: 2
+                      - rel: history
+                        href: "/matches/client/37c1ddf1-1d09-437e-8a01-af3801049c43/status"
+                      - rel: client
+                        href: "/hmis-clientapi/rest/v2015/clients/37c1ddf1-1d09-437e-8a01-af3801049c43"
+                    - reservationId: 8379d701-59f7-4832-96d1-5dbf0b8761b0
+                      eligibleClients:
+                        clientId: 049f398d-e048-400d-adb6-d74ced86ee63
+                        surveyScore: 5
+                        programType: '2'
+                        matched: true
+                        surveyDate: 2016-12-20 00:00
+                        spdatLabel: SINGLE_ADULT
+                        dateCreated: 2016-12-20 08:13
+                        dateUpdated: 2017-02-18 18:55
+                        ignoreMatchProcess: false
+                        remarks: Ignore match flag auto set by system to false
+                        bonusScore: 0
+                        totalScore: 5
+                      housingUnitId: 196b83b6-d546-40a7-b72a-3bc2770064b0
+                      matchDate: '2016-12-20'
+                      matchStatus: 0
+                      manualMatch: false
+                      dateCreated: 2016-12-20 08:33
+                      dateUpdated: 2016-12-20 08:33
+                      links:
+                      - rel: history
+                        href: "/matches/client/049f398d-e048-400d-adb6-d74ced86ee63/status"
+                      - rel: client
+                        href: "/hmis-clientapi/rest/v2015/clients/049f398d-e048-400d-adb6-d74ced86ee63"
+                    - reservationId: f450c258-326b-4f4a-9c3f-0a6d6ae6fa58
+                      eligibleClients:
+                        clientId: e23b264e-b69f-446e-84e7-58e3fe00e0f1
+                        surveyScore: 5
+                        programType: '2'
+                        matched: true
+                        surveyDate: 2016-12-20 00:00
+                        spdatLabel: SINGLE_ADULT
+                        dateCreated: 2016-12-20 08:33
+                        dateUpdated: 2017-02-18 18:54
+                        ignoreMatchProcess: false
+                        remarks: Ignore match flag auto set by system to false
+                        bonusScore: 0
+                        totalScore: 5
+                      housingUnitId: 68e75874-f62c-4436-b12b-a540d7977869
+                      matchDate: '2016-12-20'
+                      matchStatus: 0
+                      manualMatch: false
+                      dateCreated: 2016-12-20 08:33
+                      dateUpdated: 2016-12-20 08:33
+                      links:
+                      - rel: history
+                        href: "/matches/client/e23b264e-b69f-446e-84e7-58e3fe00e0f1/status"
+                      - rel: client
+                        href: "/hmis-clientapi/rest/v2015/clients/e23b264e-b69f-446e-84e7-58e3fe00e0f1"
+                    page:
+                      size: 20
+                      totalElements: 73
+                      totalPages: 4
+                      number: 0
         '403':
           description: ''
           content:
@@ -58,7 +113,7 @@ paths:
                   error: Token Not Valid
       description: Get the list of the proposed matches.
       operationId: GET_matches
-  '/matches/client/{dedupClientId}':
+  '/v3/matches/client/{dedupClientId}':
     get:
       responses:
         '200':
@@ -138,7 +193,7 @@ paths:
         schema:
           type: string
         description: id of the client.
-  /eligibleclients:
+  /v3/eligibleclients:
     get:
       responses:
         '200':
@@ -151,27 +206,27 @@ paths:
                      "links":[
                         {
                            "rel":"first",
-                           "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=0&size=1"
+                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=0&size=1"
                         },
                         {
                            "rel":"self",
-                           "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?size=1"
+                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?size=1"
                         },
                         {
                            "rel":"next",
-                           "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=1&size=1"
+                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=1&size=1"
                         },
                         {
                            "rel":"last",
-                           "href":"https://www.hmislynk.com/house-matching-api/eligibleclients?page=2&size=1"
+                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=2&size=1"
                         },
                         {
                            "rel":"scoreprocessingstatus",
-                           "href":"https://www.hmislynk.com/house-matching-api/scores/status"
+                           "href":"https://www.hslynk.com/house-matching-api/scores/status"
                         },
                         {
                            "rel":"scoreprocessinghistory",
-                           "href":"https://www.hmislynk.com/house-matching-api/scores/history"
+                           "href":"https://www.hslynk.com/house-matching-api/scores/history"
                         }
                      ],
                      "content":[
@@ -199,110 +254,6 @@ paths:
                         "totalPages":3
                      }
                   }
-                  type: |
-                          {
-                                 "$schema":"http://json-schema.org/draft-04/schema#",
-                                 "additionalProperties":false,
-                                 "id":"http://example.com/example.json",
-                                 "properties":{
-                                    "content":{
-                                       "items":{
-                                          "additionalProperties":false,
-                                          "properties":{
-                                             "clientId":{
-                                                "type":"string"
-                                             },
-                                             "dateCreated":{
-                                                "type":"string"
-                                             },
-                                             "dateUpdated":{
-                                                "type":"string"
-                                             },
-                                             "matched":{
-                                                "type":"boolean"
-                                             },
-                                             "surveyDate":{
-                                                "type":"string"
-                                             },
-                                             "surveyScore":{
-                                                "type":"integer"
-                                             },
-                                             "userId":{
-                                                "type":"string"
-                                             },
-                                             "client":{
-                                                "type":"object",
-                                                "properties":{
-                                                   "id":{
-                                                      "type":"string"
-                                                   },
-                                                   "firstName":{
-                                                      "type":"string"
-                                                   },
-                                                   "middleName":{
-                                                      "type":"string"
-                                                   },
-                                                   "lastName":{
-                                                      "type":"string"
-                                                   },
-                                                   "dob":{
-                                                      "type":"number"
-                                                   }
-                                                }
-                                           }
-                                          },
-
-                                          "type":"object"
-                                       },
-                                       "type":"array"
-                                    },
-                                    "links":{
-                                       "items":{
-                                          "additionalProperties":false,
-                                          "properties":{
-                                             "href":{
-                                                "type":"string"
-                                             },
-                                             "rel":{
-                                                "type":"string"
-                                             }
-                                          },
-                                          "required":[
-                                             "href",
-                                             "rel"
-                                          ],
-                                          "type":"object"
-                                       },
-                                       "type":"array"
-                                    },
-                                    "page":{
-                                       "additionalProperties":false,
-                                       "properties":{
-                                          "size":{
-                                             "type":"integer"
-                                          },
-                                          "totalElements":{
-                                             "type":"integer"
-                                          },
-                                          "totalPages":{
-                                             "type":"integer"
-                                          }
-                                       },
-                                       "required":[
-                                          "totalPages",
-                                          "totalElements",
-                                          "size"
-                                       ],
-                                       "type":"object"
-                                    }
-                                 },
-                                 "required":[
-                                    "content",
-                                    "page",
-                                    "links"
-                                 ],
-                                 "type":"object"
-                              }
         '403':
           description: ''
           content:
@@ -323,7 +274,7 @@ paths:
             type: string
         - name: sort
           in: query
-          required: true
+          required: false
           description: >
             To sort data while retrieving. Provide sorting field (if want to
             sort on multiple fields provide fields with comma separation) and
@@ -687,13 +638,6 @@ components:
           type: string
         recipients:
           type: object
-          properties:
-            toRecipients:
-              type: array
-            bccRecipients:
-              type: array
-            ccRecipients:
-              type: array
       required:
         - status
         - comments
