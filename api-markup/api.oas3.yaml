@@ -2,6 +2,9 @@ openapi: 3.0.0
 info:
   title: Housing Matching Service
   version: 3.0.0
+  description: |
+       **Note :**
+              Please note that the partial updates are supported via PUT APIs. However, Note that If "null" value is passed for any element, in the PUT request body, it will be ignored. An empty string value should be sent (instead of "null" value) for the elements that need to be updated with NULL values.
 servers:
   - url: 'https://www.hslynk.com/house-matching-api/'
 paths:
