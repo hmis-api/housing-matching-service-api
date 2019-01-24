@@ -8,6 +8,7 @@ info:
 servers:
   - url: 'https://www.hslynk.com/house-matching-api/'
 paths:
+
   /v3/matches:
     get:
       responses:
@@ -441,6 +442,18 @@ paths:
         schema:
           type: string
         description: id of the client.
+  '/matches':
+    post:
+      description: | 
+                    This api triggers match process job
+      responses:
+        '200':
+          description: ' '
+          content:
+            application/json:
+              schema:
+                example: 
+                    processId: 113ee8f6-f078-4ca7-a023-6926acc1bbb2
   '/matches/client/{dedupClientId}/status':
     get:
       responses:
