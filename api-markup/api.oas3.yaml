@@ -325,35 +325,37 @@ paths:
             schema:
               type: string
         required: true
-  '/eligibleclients/{dedupClientId}':
+  '/eligibleclients/{clientId}':
     get:
       responses:
         '200':
           description: ''
           content:
             application/json:
-              example:
-                clientId: 800fa63b-8278-414c-83f1-5e29740205a0
-                surveyScore: 10
-                matched: false
-                surveyDate: '09-03-2016 04:19'
-                dateCreated: '10-25-2016 15:24'
-                dateUpdated: '10-25-2016 15:24'
-                userId: 74fe590d-9389-4936-abef-1c18fbf14750
-                remarks: Clients eligible for housing unit
-                ignoreMatchProcess: false
-                client:
-                  id: 800fa63b-8278-414c-83f1-5e29740205a0
-                  firstName: Ryan
-                  middleName: ''
-                  lastName: Peterson
-                  dob: 339989400000
-                  dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
-                links:
-                  - rel: client
-                    href: /hmis-clientapi/rest/v2014/clients/800fa63b-8278-414c-83f1-5e29740205a0
               schema:
-                $ref: "#/components/schemas/getdedupclient"
+                example:
+                  clientId: 800fa63b-8278-414c-83f1-5e29740205a0
+                  surveyScore: 10
+                  bonusScore: 12
+                  totalScore: 22
+                  readdedReason: Reason for readded
+                  matched: false
+                  surveyDate: '09-03-2016 04:19'
+                  dateCreated: '10-25-2016 15:24'
+                  dateUpdated: '10-25-2016 15:24'
+                  userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                  remarks: Clients eligible for housing unit
+                  ignoreMatchProcess: false
+                  client:
+                    id: 800fa63b-8278-414c-83f1-5e29740205a0
+                    firstName: Ryan
+                    middleName: ''
+                    lastName: Peterson
+                    dob: 339989400000
+                    dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                  links:
+                    - rel: client
+                      href: /hmis-clientapi/rest/v2014/clients/800fa63b-8278-414c-83f1-5e29740205a0
         '403':
           description: ''
           content:
@@ -402,8 +404,7 @@ paths:
           content:
             application/json:
               schema:
-                example:
-                  updated: true
+                example: |
         '403':
           description: ''
           content:
@@ -423,20 +424,22 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
-              surveyType: Servey Type
-              surveyScore: '10'
-              programType: Program Type
-              matched: false
-              spdatLabel: SINGLE_ADULT
-              zipcode: '53320'
-              surveyDate: '05-05-2016 12:12'
-              remarks: Client data updated
-            schema:
-              $ref: "#/components/schemas/putdedupclient"
+           schema:
+              example:
+                surveyType: Servey Type
+                surveyScore: '10'
+                programType: Program Type
+                matched: false
+                spdatLabel: SINGLE_ADULT
+                zipcode: '53320'
+                surveyDate: '05-05-2016 12:12'
+                remarks: Client data updated
+                bonusScore: 12
+                totalScore: 22
+                readdedReason: Reason for readded
         required: true
     parameters:
-      - name: dedupClientId
+      - name: clientId
         in: path
         required: true
         schema:
@@ -549,21 +552,20 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
-              status: '1'
-              comments: forwarding to next level
-              recipients:
-                toRecipients:
-                  - agent@gmail.com
-                  - client@hmis.com
-                bccRecipients:
-                  - agent@gmail.com
-                  - client@hmis.com
-                ccRecipients:
-                  - agent@gmail.com
-                  - client@hmis.com
             schema:
-              $ref: "#/components/schemas/putstatusrequest"
+              example:
+                status: '1'
+                comments: forwarding to next level
+                recipients:
+                  toRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
+                  bccRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
+                  ccRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
         required: true
     parameters:
       - name: dedupClientId
