@@ -267,24 +267,6 @@ paths:
                   error: Token Not Valid
       description: Returns a list of the top eligible clients.
       operationId: GET_eligibleclients
-      parameters:
-        - name: spdattype
-          in: query
-          schema:
-            type: string
-        - name: status
-          in: query
-          schema:
-            type: string
-        - name: sort
-          in: query
-          required: false
-          description: >
-            To sort data while retrieving. Provide sorting field (if want to
-            sort on multiple fields provide fields with comma separation) and
-            order (asc,desc) with comma separation.
-          schema:
-            type: string
     post:
       responses:
         '200':
@@ -325,6 +307,63 @@ paths:
             schema:
               type: string
         required: true
+  '/v3/eligibleclients/{clientDedupId}':
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example: |
+                            {
+                              "clientId":"9ed5ef09-920a-4046-984e-d1d7556f084a",
+                              "surveyScore":22,
+                              "programType":"10",
+                              "matched":false,
+                              "surveyDate":"2017-12-13 21:18",
+                              "spdatLabel":"SINGLE_ADULT",
+                              "dateCreated":"2017-12-13 22:00",
+                              "dateUpdated":"2019-04-10 14:00",
+                              "ignoreMatchProcess":false,
+                              "remarks":"",
+                              "client":{
+                                  "id":"9ed5ef09-920a-4046-984e-d1d7556f084a",
+                                  "firstName":"Johnathan",
+                                  "middleName":"s",
+                                  "lastName":"Spears",
+                                  "dob":479520000000,
+                                  "phoneNumber":"(209) 555-5555",
+                                  "emailAddress":"jspears@boomboom.com",
+                                  "clientDedupId":"0f2af660-df24-11e7-8e7c-02fe61f7863e"
+                              },
+                              "clientDedupId":"0f2af660-df24-11e7-8e7c-02fe61f7863e",
+                              "surveySubmissionDate":"2017-12-13 21:18",
+                              "bonusScore":0,
+                              "totalScore":22,
+                              "links":[
+                                  {
+                                      "rel":"client",
+                                      "href":"/hmis-clientapi/rest/9ed5ef09-920a-4046-984e-d1d7556f084a/clients/9ed5ef09-920a-4046-984e-d1d7556f084a"
+                                  }
+                              ]
+                            }
+
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Token Not Valid
+      description: Returns a list of the top eligible clients.
+      operationId: GET_eligibleclients_dedupid
+      parameters:
+        - name: clientDedupId
+          in: path
+          schema:
+             type: string
+          required: true   
   '/eligibleclients/{clientId}':
     get:
       responses:
