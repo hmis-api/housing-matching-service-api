@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.0.0
+  version: 3.0.1
   description: |
        **Note :**
               Please note that the partial updates are supported via PUT APIs. However, Note that If "null" value is passed for any element, in the PUT request body, it will be ignored. An empty string value should be sent (instead of "null" value) for the elements that need to be updated with NULL values.
@@ -117,7 +117,7 @@ paths:
                   error: Token Not Valid
       description: Get the list of the proposed matches.
       operationId: GET_matches
-  '/v3/matches/client/{dedupClientId}':
+  '/v3/matches/client/{dedupclientid}':
     get:
       responses:
         '200':
@@ -191,7 +191,7 @@ paths:
               type: string
         required: true
     parameters:
-      - name: dedupClientId
+      - name: dedupclientid
         in: path
         required: true
         schema:
@@ -307,7 +307,7 @@ paths:
             schema:
               type: string
         required: true
-  '/v3/eligibleclients/{clientDedupId}':
+  '/v3/eligibleclients/{clientdedupid}':
     get:
       responses:
         '200':
@@ -359,12 +359,12 @@ paths:
       description: Returns a list of the top eligible clients.
       operationId: GET_eligibleclients_dedupid
       parameters:
-        - name: clientDedupId
+        - name: clientdedupid
           in: path
           schema:
              type: string
           required: true   
-  '/eligibleclients/{clientId}':
+  '/eligibleclients/{clientid}':
     get:
       responses:
         '200':
@@ -478,7 +478,7 @@ paths:
                 readdedReason: Reason for readded
         required: true
     parameters:
-      - name: clientId
+      - name: clientid
         in: path
         required: true
         schema:
@@ -496,7 +496,7 @@ paths:
               schema:
                 example: 
                     processId: 113ee8f6-f078-4ca7-a023-6926acc1bbb2
-  '/matches/client/{dedupClientId}/status':
+  '/matches/client/{dedupclientid}/status':
     get:
       responses:
         '200':
@@ -607,7 +607,7 @@ paths:
                     - client@hmis.com
         required: true
     parameters:
-      - name: dedupClientId
+      - name: dedupclientid
         in: path
         required: true
         schema:
