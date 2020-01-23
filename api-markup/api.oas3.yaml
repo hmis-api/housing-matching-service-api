@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.0.1
+  version: 3.0.2
   description: |
        **Note :**
               Please note that the partial updates are supported via PUT APIs. However, Note that If "null" value is passed for any element, in the PUT request body, it will be ignored. An empty string value should be sent (instead of "null" value) for the elements that need to be updated with NULL values.
@@ -484,6 +484,126 @@ paths:
         schema:
           type: string
         description: id of the client.
+  '/v3/eligibleclients/{dedupclientid}':
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  clientId: 800fa63b-8278-414c-83f1-5e29740205a0
+                  surveyScore: 10
+                  bonusScore: 12
+                  totalScore: 22
+                  readdedReason: Reason for readded
+                  matched: false
+                  surveyDate: '09-03-2016 04:19'
+                  dateCreated: '10-25-2016 15:24'
+                  dateUpdated: '10-25-2016 15:24'
+                  userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                  remarks: Clients eligible for housing unit
+                  ignoreMatchProcess: false
+                  client:
+                    id: 800fa63b-8278-414c-83f1-5e29740205a0
+                    firstName: Ryan
+                    middleName: ''
+                    lastName: Peterson
+                    dob: 339989400000
+                    dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                  links:
+                    - rel: client
+                      href: /hmis-clientapi/rest/v2014/clients/800fa63b-8278-414c-83f1-5e29740205a0
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Token Not Valid
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Resource Not Found
+      description: Fetch a particular client
+      operationId: GET_v3_eligibleclients-dedupClientId
+    delete:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  deleted: true
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Token Not Valid
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Resource Not Found
+      description: Delete a particular client
+      operationId: DELETE_v3_eligibleclients-dedupClientId
+    put:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example: |
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  error: Token Not Valid
+      description: >
+        An eligible client, who is already matched and assigned an housing unit
+        can reject the referral (an assigned housig unit can be rejected for
+        various reasons). When this happens, "ignoreMatchProcess" flag will be
+        set to "true" and the hosuing unit will become vacant (available for
+        matching process again) An eligible client, who rejected the refferal,
+        can be made available for matching process by setting
+        "ignoreMatchProcess" to FALSE.
+      operationId: PUT_v3_eligibleclients-dedupClientId
+      requestBody:
+        content:
+          application/json:
+           schema:
+              example:
+                surveyType: Servey Type
+                surveyScore: '10'
+                programType: Program Type
+                matched: false
+                spdatLabel: SINGLE_ADULT
+                zipcode: '53320'
+                surveyDate: '05-05-2016 12:12'
+                remarks: Client data updated
+                bonusScore: 12
+                totalScore: 22
+                readdedReason: Reason for readded
+        required: true
+    parameters:
+      - name: dedupclientid
+        in: path
+        required: true
+        schema:
+          type: string
+        description: client dedup id.        
   '/matches':
     post:
       description: | 
