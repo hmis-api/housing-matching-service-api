@@ -184,11 +184,10 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
-              reservationAdults: '0'
-              reservationChildren: '2'
             schema:
-              type: string
+                example:
+                  reservationAdults: '0'
+                  reservationChildren: '2'            
         required: true
     parameters:
       - name: dedupclientid
