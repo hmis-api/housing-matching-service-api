@@ -6,7 +6,7 @@ info:
        **Note :**
               Please note that the partial updates are supported via PUT APIs. However, Note that If "null" value is passed for any element, in the PUT request body, it will be ignored. An empty string value should be sent (instead of "null" value) for the elements that need to be updated with NULL values.
 servers:
-  - url: 'https://www.hslynk.com/house-matching-api/'
+  - url: 'https://api.hslynk.com/house-matching-api/'
 paths:
 
   /v3/matches:
@@ -141,7 +141,7 @@ paths:
               schema:
                 example:
                   error: Token Not Valid
-      description: Get the proposed matche for a client_id.
+      description: Get the proposed matche for a dedupClientId.
       operationId: GET_matches-client-dedupClientId
     delete:
       responses:
@@ -179,7 +179,7 @@ paths:
                 example:
                   error: Token Not Valid
       description: |
-        Used for updating/accepting the match for a client id.
+        Used for updating/accepting the match for a dedupClientId.
       operationId: PUT_matches-client-dedupClientId
       requestBody:
         content:
@@ -205,59 +205,39 @@ paths:
           content:
             application/json:
               schema:
-                example: |
-                  {
-                     "links":[
-                        {
-                           "rel":"first",
-                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=0&size=1"
-                        },
-                        {
-                           "rel":"self",
-                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?size=1"
-                        },
-                        {
-                           "rel":"next",
-                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=1&size=1"
-                        },
-                        {
-                           "rel":"last",
-                           "href":"https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=2&size=1"
-                        },
-                        {
-                           "rel":"scoreprocessingstatus",
-                           "href":"https://www.hslynk.com/house-matching-api/scores/status"
-                        },
-                        {
-                           "rel":"scoreprocessinghistory",
-                           "href":"https://www.hslynk.com/house-matching-api/scores/history"
-                        }
-                     ],
-                     "content":[
-                        {
-                           "clientId":"91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
-                           "surveyScore":10,
-                           "matched":false,
-                           "surveyDate":"09-29-2016 11:05",
-                           "dateCreated":"10-25-2016 15:24",
-                           "dateUpdated":"10-25-2016 15:24",
-                           "userId":"74fe590d-9389-4936-abef-1c18fbf14750",
-                            "client":{
-                                    "id":"91dbc8c3-6df6-4702-9733-c84dd67bf1ed",
-                                     "firstName":"Ryan",
-                                     "middleName":"",
-                                     "lastName":"Peterson",
-                                     "dob":339989400000,
-                                     "dedupClientId":"5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8"
-                                  }
-                            }
-                     ],
-                     "page":{
-                        "size":1,
-                        "totalElements":3,
-                        "totalPages":3
-                     }
-                  }
+                example: 
+                    links:
+                    - rel: first
+                      href: https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=0&size=1
+                    - rel: self
+                      href: https://www.hslynk.com/house-matching-api/v3/eligibleclients?size=1
+                    - rel: next
+                      href: https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=1&size=1
+                    - rel: last
+                      href: https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=2&size=1
+                    - rel: scoreprocessingstatus
+                      href: https://www.hslynk.com/house-matching-api/scores/status
+                    - rel: scoreprocessinghistory
+                      href: https://www.hslynk.com/house-matching-api/scores/history
+                    content:
+                    - clientId: 91dbc8c3-6df6-4702-9733-c84dd67bf1ed
+                      surveyScore: 10
+                      matched: false
+                      surveyDate: 09-29-2016 11:05
+                      dateCreated: 10-25-2016 15:24
+                      dateUpdated: 10-25-2016 15:24
+                      userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                      client:
+                        id: 91dbc8c3-6df6-4702-9733-c84dd67bf1ed
+                        firstName: Ryan
+                        middleName: ''
+                        lastName: Peterson
+                        dob: 339989400000
+                        dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                    page:
+                      size: 1
+                      totalElements: 3
+                      totalPages: 3
         '403':
           description: ''
           content:
@@ -265,7 +245,7 @@ paths:
               schema:
                 example:
                   error: Token Not Valid
-      description: Returns a list of the top eligible clients.
+      description: Return the list of all eligible clients. If there are multiple clients exists for the same dedupId, the client that has latest survey date will be sent in the API response.
       operationId: GET_eligibleclients
     post:
       responses:
@@ -284,28 +264,24 @@ paths:
                 example:
                   error: Token Not Valid
       description: >
-        Will add client to the eligible list. Accept json having one or more
-        clients.
-
-        Allowed values for "spdatLabel" field are
-        "FAMILY","YOUTH","SINGLE_ADULT"
+        Will add the client to the eligible clients list. If the client already exists in the active list, this API will update the information. 
+        Allowed values for "spdatLabel" field are "FAMILY","YOUTH","SINGLE_ADULT"
       operationId: POST_eligibleclients
       requestBody:
         content:
           application/json:
-            example:
-              clientDedupId: 74520590-3eb3-11e7-85e4-06c37be0e663
-              surveyType: Servey Type
-              surveyScore: '17'
-              programType: Program Type
-              matched: true
-              spdatLabel: SINGLE_ADULT
-              zipcode: '53320'
-              surveyDate: '05-05-2016 09:12'
-              ignoreMatchProcess: true
-              remarks: Client not interested
             schema:
-              type: string
+                example:
+                  clientDedupId: 74520590-3eb3-11e7-85e4-06c37be0e663
+                  surveyType: Servey Type
+                  surveyScore: '17'
+                  programType: Program Type
+                  matched: true
+                  spdatLabel: SINGLE_ADULT
+                  zipcode: '53320'
+                  surveyDate: '05-05-2016 09:12'
+                  ignoreMatchProcess: true
+                  remarks: Client not interested
         required: true
   '/v3/eligibleclients/{clientdedupid}':
     get:
@@ -315,39 +291,34 @@ paths:
           content:
             application/json:
               schema:
-                example: |
-                            {
-                              "clientId":"9ed5ef09-920a-4046-984e-d1d7556f084a",
-                              "surveyScore":22,
-                              "programType":"10",
-                              "matched":false,
-                              "surveyDate":"2017-12-13 21:18",
-                              "spdatLabel":"SINGLE_ADULT",
-                              "dateCreated":"2017-12-13 22:00",
-                              "dateUpdated":"2019-04-10 14:00",
-                              "ignoreMatchProcess":false,
-                              "remarks":"",
-                              "client":{
-                                  "id":"9ed5ef09-920a-4046-984e-d1d7556f084a",
-                                  "firstName":"Johnathan",
-                                  "middleName":"s",
-                                  "lastName":"Spears",
-                                  "dob":479520000000,
-                                  "phoneNumber":"(209) 555-5555",
-                                  "emailAddress":"jspears@boomboom.com",
-                                  "clientDedupId":"0f2af660-df24-11e7-8e7c-02fe61f7863e"
-                              },
-                              "clientDedupId":"0f2af660-df24-11e7-8e7c-02fe61f7863e",
-                              "surveySubmissionDate":"2017-12-13 21:18",
-                              "bonusScore":0,
-                              "totalScore":22,
-                              "links":[
-                                  {
-                                      "rel":"client",
-                                      "href":"/hmis-clientapi/rest/9ed5ef09-920a-4046-984e-d1d7556f084a/clients/9ed5ef09-920a-4046-984e-d1d7556f084a"
-                                  }
-                              ]
-                            }
+                example: 
+                    clientId: 9ed5ef09-920a-4046-984e-d1d7556f084a
+                    surveyScore: 22
+                    programType: '10'
+                    matched: false
+                    surveyDate: 2017-12-13 21:18
+                    spdatLabel: SINGLE_ADULT
+                    dateCreated: 2017-12-13 22:00
+                    dateUpdated: 2019-04-10 14:00
+                    ignoreMatchProcess: false
+                    remarks: ''
+                    client:
+                      id: 9ed5ef09-920a-4046-984e-d1d7556f084a
+                      firstName: Johnathan
+                      middleName: s
+                      lastName: Spears
+                      dob: 479520000000
+                      phoneNumber: "(209) 555-5555"
+                      emailAddress: jspears@boomboom.com
+                      clientDedupId: 0f2af660-df24-11e7-8e7c-02fe61f7863e
+                    clientDedupId: 0f2af660-df24-11e7-8e7c-02fe61f7863e
+                    surveySubmissionDate: 2017-12-13 21:18
+                    bonusScore: 0
+                    totalScore: 22
+                    links:
+                    - rel: client
+                      href: "/hmis-clientapi/rest/9ed5ef09-920a-4046-984e-d1d7556f084a/clients/9ed5ef09-920a-4046-984e-d1d7556f084a"
+
 
         '403':
           description: ''
@@ -356,7 +327,7 @@ paths:
               schema:
                 example:
                   error: Token Not Valid
-      description: Returns a list of the top eligible clients.
+      description: Returns the client that matches the dedupId and has latest survey date (if there are multiple clients exist for the dedupId).
       operationId: GET_eligibleclients_dedupid
       parameters:
         - name: clientdedupid
@@ -529,7 +500,7 @@ paths:
               schema:
                 example:
                   error: Resource Not Found
-      description: Fetch a particular client
+      description: |
       operationId: GET_v3_eligibleclients-dedupClientId
     delete:
       responses:
@@ -554,7 +525,7 @@ paths:
               schema:
                 example:
                   error: Resource Not Found
-      description: Delete a particular client
+      description: |
       operationId: DELETE_v3_eligibleclients-dedupClientId
     put:
       responses:
@@ -577,8 +548,9 @@ paths:
         various reasons). When this happens, "ignoreMatchProcess" flag will be
         set to "true" and the hosuing unit will become vacant (available for
         matching process again) An eligible client, who rejected the refferal,
-        can be made available for matching process by setting
-        "ignoreMatchProcess" to FALSE.
+        can be made available for matching process by setting 
+        "ignoreMatchProcess" to FALSE. 
+        Note: The client that matches the dedupId and has latest survey date (if there are multiple clients exist for the dedupId) will be considered.
       operationId: PUT_v3_eligibleclients-dedupClientId
       requestBody:
         content:
