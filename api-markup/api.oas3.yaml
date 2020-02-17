@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.0.2
+  version: 3.1.0
   description: |
        **Note :**
               Please note that the partial updates are supported via PUT APIs. However, Note that If "null" value is passed for any element, in the PUT request body, it will be ignored. An empty string value should be sent (instead of "null" value) for the elements that need to be updated with NULL values.
@@ -16,7 +16,180 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "links",
+                      "content",
+                      "page"
+                    ],
+                    "properties": {
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rel",
+                            "href"
+                          ],
+                          "properties": {
+                            "rel": {
+                              "type": "string",
+                            },
+                            "href": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "reservationId",
+                            "eligibleClients",
+                            "housingUnitId",
+                            "matchDate",
+                            "matchStatus",
+                            "manualMatch",
+                            "dateCreated",
+                            "dateUpdated",
+                            "links"
+                          ],
+                          "properties": {
+                            "reservationId": {
+                              "type": "string",
+                              "format": "uuid",
+                            },
+                            "eligibleClients": {
+                              "type": "object",
+                              "required": [
+                                "clientId",
+                                "surveyScore",
+                                "programType",
+                                "matched",
+                                "surveyDate",
+                                "spdatLabel",
+                                "dateCreated",
+                                "dateUpdated",
+                                "ignoreMatchProcess",
+                                "remarks",
+                                "bonusScore",
+                                "totalScore"
+                              ],
+                              "properties": {
+                                "clientId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                },
+                                "surveyScore": {
+                                  "type": "integer"
+                                },
+                                "programType": {
+                                  "type": "string",
+                                },
+                                "matched": {
+                                  "type": "boolean"
+                                },
+                                "surveyDate": {
+                                  "type": "string",
+                                  "format": "YYYY-MM-dd HH:mm",
+                                },
+                                "spdatLabel": {
+                                  "type": "string",
+                                },
+                                "dateCreated": {
+                                  "type": "string",
+                                  "format": "YYYY-MM-dd HH:mm",
+                                },
+                                "dateUpdated": {
+                                  "type": "string",
+                                  "format": "YYYY-MM-dd HH:mm",
+                                },
+                                "ignoreMatchProcess": {
+                                  "type": "boolean"
+                                },
+                                "remarks": {
+                                  "type": "string",
+                                },
+                                "bonusScore": {
+                                  "type": "integer"
+                                },
+                                "totalScore": {
+                                  "type": "integer"
+                                }
+                              }
+                            },
+                            "housingUnitId": {
+                              "type": "string",
+                              "format": "uuid",
+                            },
+                            "matchDate": {
+                              "type": "string",
+                              "format": "YYYY-MM-dd",
+                            },
+                            "matchStatus": {
+                              "type": "integer"
+                            },
+                            "manualMatch": {
+                              "type": "boolean"
+                            },
+                            "dateCreated": {
+                              "type": "string",
+                              "format": "YYYY-MM-dd HH:mm",
+                            },
+                            "dateUpdated": {
+                              "type": "string",
+                              "format": "YYYY-MM-dd HH:mm",
+                            },
+                            "links": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "rel",
+                                  "href"
+                                ],
+                                "properties": {
+                                  "rel": {
+                                    "type": "string",
+                                  },
+                                  "href": {
+                                    "type": "string",
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "page": {
+                        "type": "object",
+                        "required": [
+                          "size",
+                          "totalElements",
+                          "totalPages",
+                          "number"
+                        ],
+                        "properties": {
+                          "size": {
+                            "type": "integer"
+                          },
+                          "totalElements": {
+                            "type": "integer"
+                          },
+                          "totalPages": {
+                            "type": "integer"
+                          },
+                          "number": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                     links:
                     - rel: first
@@ -112,7 +285,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: Get the list of the proposed matches.
@@ -124,7 +308,49 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "required": [
+                      "reservation_id",
+                      "client_id",
+                      "housing_unit_id",
+                      "match_date",
+                      "dateCreated",
+                      "dateUpdated",
+                      "userId",
+                      "matchedStatus"
+                    ],
+                    "properties": {
+                      "reservation_id": {
+                        "type": "string",
+                      },
+                      "client_id": {
+                        "type": "string",
+                      },
+                      "housing_unit_id": {
+                        "type": "string",
+                      },
+                      "match_date": {
+                        "type": "string",
+                        "format": "YYYY-MM-dd",
+                      },
+                      "dateCreated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "dateUpdated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "userId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "matchedStatus": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   reservation_id: '12345'
                   client_id: '456788'
@@ -138,7 +364,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                    {
+                      "type": "object",
+                      "required": [
+                        "error"
+                      ],
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                        }
+                      }
+                    }
                 example:
                   error: Token Not Valid
       description: Get the proposed matche for a dedupClientId.
@@ -149,14 +386,36 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "deleted"
+                    ],
+                    "properties": {
+                      "deleted": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   deleted: ok
         '403':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: |
@@ -168,14 +427,36 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "matched"
+                    ],
+                    "properties": {
+                      "matched": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   matched: ok
         '403':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: |
@@ -184,10 +465,25 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "reservationAdults",
+                      "reservationChildren"
+                    ],
+                    "properties": {
+                      "reservationAdults": {
+                        "type": "string",
+                      },
+                      "reservationChildren": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   reservationAdults: '0'
-                  reservationChildren: '2'            
+                  reservationChildren: '2'
         required: true
     parameters:
       - name: dedupclientid
@@ -203,8 +499,132 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
-                example: 
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "links",
+                      "content",
+                      "page"
+                    ],
+                    "properties": {
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rel",
+                            "href"
+                          ],
+                          "properties": {
+                            "rel": {
+                              "type": "string",
+                            },
+                            "href": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "clientId",
+                            "surveyScore",
+                            "matched",
+                            "surveyDate",
+                            "dateCreated",
+                            "dateUpdated",
+                            "userId",
+                            "client"
+                          ],
+                          "properties": {
+                            "clientId": {
+                              "type": "string",
+                              "format": "uuid",
+                            },
+                            "surveyScore": {
+                              "type": "integer"
+                            },
+                            "matched": {
+                              "type": "boolean"
+                            },
+                            "surveyDate": {
+                              "type": "string",
+                              "format": "MM-dd-YYYY HH:mm",
+                            },
+                            "dateCreated": {
+                              "type": "string",
+                              "format": "MM-dd-YYYY HH:mm",
+                            },
+                            "dateUpdated": {
+                              "type": "string",
+                              "format": "MM-dd-YYYY HH:mm",
+                            },
+                            "userId": {
+                              "type": "string",
+                              "format": "uuid",
+                            },
+                            "client": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "firstName",
+                                "middleName",
+                                "lastName",
+                                "dob",
+                                "dedupClientId"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                },
+                                "firstName": {
+                                  "type": "string",
+                                },
+                                "middleName": {
+                                  "type": "string",
+                                },
+                                "lastName": {
+                                  "type": "string",
+                                },
+                                "dob": {
+                                  "type": "integer"
+                                },
+                                "dedupClientId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "page": {
+                        "type": "object",
+                        "required": [
+                          "size",
+                          "totalElements",
+                          "totalPages"
+                        ],
+                        "properties": {
+                          "size": {
+                            "type": "integer"
+                          },
+                          "totalElements": {
+                            "type": "integer"
+                          },
+                          "totalPages": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                example:
                     links:
                     - rel: first
                       href: https://www.hslynk.com/house-matching-api/v3/eligibleclients?page=0&size=1
@@ -241,7 +661,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: Return the list of all eligible clients. If there are multiple clients exists for the same dedupId, the client that has latest survey date will be sent in the API response.
@@ -252,24 +683,95 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "added"
+                    ],
+                    "properties": {
+                      "added": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
                 example:
                   added: true
         '403':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: >
-        Will add the client to the eligible clients list. If the client already exists in the active list, this API will update the information. 
+        Will add the client to the eligible clients list. If the client already exists in the active list, this API will update the information.
         Allowed values for "spdatLabel" field are "FAMILY","YOUTH","SINGLE_ADULT"
       operationId: POST_eligibleclients
       requestBody:
         content:
           application/json:
-            schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "clientDedupId",
+                      "surveyType",
+                      "surveyScore",
+                      "programType",
+                      "matched",
+                      "spdatLabel",
+                      "zipcode",
+                      "surveyDate",
+                      "ignoreMatchProcess",
+                      "remarks"
+                    ],
+                    "properties": {
+                      "clientDedupId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "surveyType": {
+                        "type": "string",
+                      },
+                      "surveyScore": {
+                        "type": "string",
+                      },
+                      "programType": {
+                        "type": "string",
+                      },
+                      "matched": {
+                        "type": "boolean"
+                      },
+                      "spdatLabel": {
+                        "type": "string",
+                      },
+                      "zipcode": {
+                        "type": "string",
+                      },
+                      "surveyDate": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "ignoreMatchProcess": {
+                        "type": "boolean"
+                      },
+                      "remarks": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   clientDedupId: 74520590-3eb3-11e7-85e4-06c37be0e663
                   surveyType: Servey Type
@@ -289,8 +791,138 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
-                example: 
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "clientId",
+                      "surveyScore",
+                      "programType",
+                      "matched",
+                      "surveyDate",
+                      "spdatLabel",
+                      "dateCreated",
+                      "dateUpdated",
+                      "ignoreMatchProcess",
+                      "remarks",
+                      "client",
+                      "clientDedupId",
+                      "surveySubmissionDate",
+                      "bonusScore",
+                      "totalScore",
+                      "links"
+                    ],
+                    "properties": {
+                      "clientId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "surveyScore": {
+                        "type": "integer"
+                      },
+                      "programType": {
+                        "type": "string",
+                      },
+                      "matched": {
+                        "type": "boolean"
+                      },
+                      "surveyDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-dd HH:mm",
+                      },
+                      "spdatLabel": {
+                        "type": "string",
+                      },
+                      "dateCreated": {
+                        "type": "string",
+                        "format": "YYYY-MM-dd HH:mm",
+                      },
+                      "dateUpdated": {
+                        "type": "string",
+                        "format": "YYYY-MM-dd HH:mm",
+                      },
+                      "ignoreMatchProcess": {
+                        "type": "boolean"
+                      },
+                      "remarks": {
+                        "type": "string",
+                      },
+                      "client": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "firstName",
+                          "middleName",
+                          "lastName",
+                          "dob",
+                          "phoneNumber",
+                          "emailAddress",
+                          "clientDedupId"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                          },
+                          "firstName": {
+                            "type": "string",
+                          },
+                          "middleName": {
+                            "type": "string",
+                          },
+                          "lastName": {
+                            "type": "string",
+                          },
+                          "dob": {
+                            "type": "integer"
+                          },
+                          "phoneNumber": {
+                            "type": "string",
+                          },
+                          "emailAddress": {
+                            "type": "string",
+                          },
+                          "clientDedupId": {
+                            "type": "string",
+                            "format": "uuid",
+                          }
+                        }
+                      },
+                      "clientDedupId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "surveySubmissionDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-dd HH:mm",
+                      },
+                      "bonusScore": {
+                        "type": "integer"
+                      },
+                      "totalScore": {
+                        "type": "integer"
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rel",
+                            "href"
+                          ],
+                          "properties": {
+                            "rel": {
+                              "type": "string",
+                            },
+                            "href": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                example:
                     clientId: 9ed5ef09-920a-4046-984e-d1d7556f084a
                     surveyScore: 22
                     programType: '10'
@@ -323,7 +955,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: Returns the client that matches the dedupId and has latest survey date (if there are multiple clients exist for the dedupId).
@@ -333,7 +976,7 @@ paths:
           in: path
           schema:
              type: string
-          required: true   
+          required: true
   '/eligibleclients/{clientid}':
     get:
       responses:
@@ -341,7 +984,120 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "clientId",
+                      "surveyScore",
+                      "bonusScore",
+                      "totalScore",
+                      "readdedReason",
+                      "matched",
+                      "surveyDate",
+                      "dateCreated",
+                      "dateUpdated",
+                      "userId",
+                      "remarks",
+                      "ignoreMatchProcess",
+                      "client",
+                      "links"
+                    ],
+                    "properties": {
+                      "clientId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "surveyScore": {
+                        "type": "integer"
+                      },
+                      "bonusScore": {
+                        "type": "integer"
+                      },
+                      "totalScore": {
+                        "type": "integer"
+                      },
+                      "readdedReason": {
+                        "type": "string",
+                      },
+                      "matched": {
+                        "type": "boolean"
+                      },
+                      "surveyDate": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "dateCreated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "dateUpdated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "userId": {
+                        "type": "string",
+                          "format": "uuid",
+                      },
+                      "remarks": {
+                        "type": "string",
+                      },
+                      "ignoreMatchProcess": {
+                        "type": "boolean"
+                      },
+                      "client": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "firstName",
+                          "middleName",
+                          "lastName",
+                          "dob",
+                          "dedupClientId"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                              "format": "uuid",
+                          },
+                          "firstName": {
+                            "type": "string",
+                          },
+                          "middleName": {
+                            "type": "string",
+                          },
+                          "lastName": {
+                            "type": "string",
+                          },
+                          "dob": {
+                            "type": "integer"
+                          },
+                          "dedupClientId": {
+                            "type": "string",
+                              "format": "uuid",
+                          }
+                        }
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rel",
+                            "href"
+                          ],
+                          "properties": {
+                            "rel": {
+                              "type": "string",
+                            },
+                            "href": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                   clientId: 800fa63b-8278-414c-83f1-5e29740205a0
                   surveyScore: 10
@@ -369,14 +1125,36 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
         '404':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Resource Not Found
       description: Fetch a particular client
@@ -387,21 +1165,54 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "deleted"
+                    ],
+                    "properties": {
+                      "deleted": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
                 example:
                   deleted: true
         '403':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
         '404':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Resource Not Found
       description: Delete a particular client
@@ -418,7 +1229,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: >
@@ -433,7 +1255,59 @@ paths:
       requestBody:
         content:
           application/json:
-           schema:
+              schema:
+                {
+                  "type": "object",
+                  "required": [
+                    "surveyType",
+                    "surveyScore",
+                    "programType",
+                    "matched",
+                    "spdatLabel",
+                    "zipcode",
+                    "surveyDate",
+                    "remarks",
+                    "bonusScore",
+                    "totalScore",
+                    "readdedReason"
+                  ],
+                  "properties": {
+                    "surveyType": {
+                      "type": "string",
+                    },
+                    "surveyScore": {
+                      "type": "string",
+                    },
+                    "programType": {
+                      "type": "string",
+                    },
+                    "matched": {
+                      "type": "boolean"
+                    },
+                    "spdatLabel": {
+                      "type": "string",
+                    },
+                    "zipcode": {
+                      "type": "string",
+                    },
+                    "surveyDate": {
+                      "type": "string",
+                      "format": "MM-dd-YYYY HH:mm",
+                    },
+                    "remarks": {
+                      "type": "string",
+                    },
+                    "bonusScore": {
+                      "type": "integer"
+                    },
+                    "totalScore": {
+                      "type": "integer"
+                    },
+                    "readdedReason": {
+                      "type": "string",
+                    }
+                  }
+                }
               example:
                 surveyType: Servey Type
                 surveyScore: '10'
@@ -461,7 +1335,120 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "clientId",
+                      "surveyScore",
+                      "bonusScore",
+                      "totalScore",
+                      "readdedReason",
+                      "matched",
+                      "surveyDate",
+                      "dateCreated",
+                      "dateUpdated",
+                      "userId",
+                      "remarks",
+                      "ignoreMatchProcess",
+                      "client",
+                      "links"
+                    ],
+                    "properties": {
+                      "clientId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "surveyScore": {
+                        "type": "integer"
+                      },
+                      "bonusScore": {
+                        "type": "integer"
+                      },
+                      "totalScore": {
+                        "type": "integer"
+                      },
+                      "readdedReason": {
+                        "type": "string",
+                      },
+                      "matched": {
+                        "type": "boolean"
+                      },
+                      "surveyDate": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "dateCreated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "dateUpdated": {
+                        "type": "string",
+                        "format": "MM-dd-YYYY HH:mm",
+                      },
+                      "userId": {
+                        "type": "string",
+                        "format": "uuid",
+                      },
+                      "remarks": {
+                        "type": "string",
+                      },
+                      "ignoreMatchProcess": {
+                        "type": "boolean"
+                      },
+                      "client": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "firstName",
+                          "middleName",
+                          "lastName",
+                          "dob",
+                          "dedupClientId"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                          },
+                          "firstName": {
+                            "type": "string",
+                          },
+                          "middleName": {
+                            "type": "string",
+                          },
+                          "lastName": {
+                            "type": "string",
+                          },
+                          "dob": {
+                            "type": "integer"
+                          },
+                          "dedupClientId": {
+                            "type": "string",
+                            "format": "uuid",
+                          }
+                        }
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rel",
+                            "href"
+                          ],
+                          "properties": {
+                            "rel": {
+                              "type": "string",
+                            },
+                            "href": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                   clientId: 800fa63b-8278-414c-83f1-5e29740205a0
                   surveyScore: 10
@@ -489,14 +1476,36 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
         '404':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Resource Not Found
       description: |
@@ -507,21 +1516,54 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "deleted"
+                    ],
+                    "properties": {
+                      "deleted": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
                 example:
                   deleted: true
         '403':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
         '404':
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Resource Not Found
       description: |
@@ -538,7 +1580,18 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      }
+                    }
+                  }
                 example:
                   error: Token Not Valid
       description: >
@@ -547,14 +1600,66 @@ paths:
         various reasons). When this happens, "ignoreMatchProcess" flag will be
         set to "true" and the hosuing unit will become vacant (available for
         matching process again) An eligible client, who rejected the refferal,
-        can be made available for matching process by setting 
-        "ignoreMatchProcess" to FALSE. 
+        can be made available for matching process by setting
+        "ignoreMatchProcess" to FALSE.
         Note: The client that matches the dedupId and has latest survey date (if there are multiple clients exist for the dedupId) will be considered.
       operationId: PUT_v3_eligibleclients-dedupClientId
       requestBody:
         content:
           application/json:
-           schema:
+              schema:
+                {
+                  "type": "object",
+                  "required": [
+                    "surveyType",
+                    "surveyScore",
+                    "programType",
+                    "matched",
+                    "spdatLabel",
+                    "zipcode",
+                    "surveyDate",
+                    "remarks",
+                    "bonusScore",
+                    "totalScore",
+                    "readdedReason"
+                  ],
+                  "properties": {
+                    "surveyType": {
+                      "type": "string",
+                    },
+                    "surveyScore": {
+                      "type": "string",
+                    },
+                    "programType": {
+                      "type": "string",
+                    },
+                    "matched": {
+                      "type": "boolean"
+                    },
+                    "spdatLabel": {
+                      "type": "string",
+                    },
+                    "zipcode": {
+                      "type": "string",
+                    },
+                    "surveyDate": {
+                      "type": "string",
+                      "format": "MM-dd-YYYY HH:mm",
+                    },
+                    "remarks": {
+                      "type": "string",
+                    },
+                    "bonusScore": {
+                      "type": "integer"
+                    },
+                    "totalScore": {
+                      "type": "integer"
+                    },
+                    "readdedReason": {
+                      "type": "string",
+                    }
+                  }
+                }
               example:
                 surveyType: Servey Type
                 surveyScore: '10'
@@ -574,18 +1679,30 @@ paths:
         required: true
         schema:
           type: string
-        description: client dedup id.        
+        description: client dedup id.
   '/matches':
     post:
-      description: | 
+      description: |
                     This api triggers match process job
       responses:
         '200':
           description: ' '
           content:
             application/json:
-              schema:
-                example: 
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "processId"
+                    ],
+                    "properties": {
+                      "processId": {
+                        "type": "string",
+                        "format": "uuid",
+                      }
+                    }
+                  }
+                example:
                     processId: 113ee8f6-f078-4ca7-a023-6926acc1bbb2
   '/matches/client/{dedupclientid}/status':
     get:
@@ -594,7 +1711,63 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "clientId",
+                        "dedupClientId",
+                        "status",
+                        "statusDescription",
+                        "recipients",
+                        "active",
+                        "dateCreated",
+                        "dateUpdated",
+                        "userId"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "dedupClientId": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "status": {
+                          "type": "integer"
+                        },
+                        "statusDescription": {
+                          "type": "string",
+                        },
+                        "recipients": {
+                          "type": "object"
+                        },
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "dateCreated": {
+                          "type": "string",
+                          "format": "MM-dd-YYYY HH:mm",
+                        },
+                        "dateUpdated": {
+                          "type": "string",
+                          "format": "MM-dd-YYYY HH:mm",
+                        },
+                        "userId": {
+                          "type": "string",
+                          "format": "uuid",
+                        }
+                      }
+                    }
+                  }
                 example:
                   - id: ec501234-c61a-48bd-a85e-580af887a6a4
                     clientId: 6f38e63f-7856-4fb1-838f-c03805eab244
@@ -630,7 +1803,33 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                   error:
                     - code: ERR_CODE_CLIENT_NOT_FOUND
@@ -645,7 +1844,33 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                   error:
                     - code: ERR_CODE_INVALID_STATUS
@@ -654,7 +1879,33 @@ paths:
           description: ''
           content:
             application/json:
-              schema:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 example:
                   error:
                     - code: ERR_CODE_CLIENT_NOT_FOUND
@@ -682,7 +1933,51 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+              schema:
+                {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "comments",
+                    "recipients"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                    },
+                    "comments": {
+                      "type": "string",
+                    },
+                    "recipients": {
+                      "type": "object",
+                      "required": [
+                        "toRecipients",
+                        "bccRecipients",
+                        "ccRecipients"
+                      ],
+                      "properties": {
+                        "toRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        },
+                        "bccRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        },
+                        "ccRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               example:
                 status: '1'
                 comments: forwarding to next level
@@ -704,93 +1999,7 @@ paths:
         schema:
           type: string
 components:
-  schemas: 
-    getdedupclient:
-      properties:
-        clientId:
-          type: string
-        dateCreated:
-          type: string
-        dateUpdated:
-          type: string
-        ignoreMatchProcess:
-          type: boolean
-        client:
-          type: object
-          properties:
-            id:
-              type: string
-            firstName:
-              type: string
-            middleName:
-              type: string
-            lastName:
-              type: string
-            dob:
-              type: number
-        links:
-          items:
-            additionalProperties: false
-            properties:
-              href:
-                type: string
-              rel:
-                type: string
-            required:
-              - href
-              - rel
-            type: object
-          type: array
-        matched:
-          type: boolean
-        remarks:
-          type: string
-        surveyDate:
-          type: string
-        surveyScore:
-          type: integer
-        userId:
-          type: string
-      type: object
-      
-    putdedupclient:
-      properties:
-        matched:
-          type: boolean
-        programType:
-          type: string
-        spdatLabel:
-          type: string
-        surveyDate:
-          type: string
-        surveyScore:
-          type: string
-        surveyType:
-          type: string
-        zipcode:
-          type: string
-        remarks:
-          type: string
-      required:
-        - spdatLabel
-        - surveyScore
-        - matched
-      type: object
-  
-    putstatusrequest:
-      type: object
-      properties:
-        status:
-          type: string
-        comments:
-          type: string
-        recipients:
-          type: object
-      required:
-        - status
-        - comments
-        - recipients
-  
+
   responses: {}
   parameters: {}
   examples: {}
