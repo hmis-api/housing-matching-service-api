@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.1.0
+  version: 3.1.1
   contact:
     name: API Source
     email: support@hslynk.com
@@ -2006,6 +2006,121 @@ paths:
         required: true
         schema:
           type: string
+  '/matchprocesslog':
+    get:
+      parameters:
+       - name: processid
+         in: query
+         required: false
+         description: match process id
+         schema:
+          type: string
+          format: UUID
+       - name: clientid
+         in: query
+         required: false
+         description: client unique identification
+         schema:
+          type: string
+          format: UUID          
+       - name: projectid
+         in: query
+         required: false
+         description: project unique identification
+         schema:
+          type: string
+          format: UUID          
+       - name: housingunitid
+         in: query
+         required: false
+         description: housing unit unique identification
+         schema:
+          type: string
+          format: UUID   
+       - name: page
+         in: query
+         required: false
+         description: page number (start with 0)
+         schema:
+          type: integer
+          default: 0
+       - name: size
+         in: query
+         required: false
+         description: number records in a page
+         schema:
+          type: integer          
+          default: 20            
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+                schema:
+                      properties:
+                          content:
+                              items:
+                                  properties:
+                                      id:
+                                          type: string
+                                      processDate:
+                                          type: string
+                                      processId:
+                                          type: string
+                                      status:
+                                          type: boolean
+                                      statusMessage:
+                                          type: string
+                                      step:
+                                          type: string
+                                  type: object
+                              type: array
+                          links:
+                              items:
+                                  properties:
+                                      href:
+                                          type: string
+                                      rel:
+                                          type: string
+                                  type: object
+                              type: array
+                          page:
+                              properties:
+                                  number:
+                                      type: integer
+                                  size:
+                                      type: integer
+                                  totalElements:
+                                      type: integer
+                                  totalPages:
+                                      type: integer
+                              type: object
+                      type: object
+
+                example: 
+                      links:
+                        - rel: first
+                          href: http://api.hslynk.com/house-matching-api/matchprocesslog?processid=a16937a2-ee96-48f7-b26c-45ef9df5e506&page=0&size=20
+                        - rel: self
+                          href: http://api.hslynk.com/house-matching-api/matchprocesslog?processid=a16937a2-ee96-48f7-b26c-45ef9df5e506
+                        - rel: next
+                          href: http://api.hslynk.com/house-matching-api/matchprocesslog?processid=a16937a2-ee96-48f7-b26c-45ef9df5e506&page=1&size=20
+                        - rel: last
+                          href: http://api.hslynk.com/house-matching-api/matchprocesslog?processid=a16937a2-ee96-48f7-b26c-45ef9df5e506&page=8&size=20
+                      content:
+                        - id: a6148326-5204-43d5-8a30-a1c475c44071
+                          statusMessage: SUCCESS - 55 housing unit(s) loaded
+                          step: FETCH vacant housing units.
+                          status: true
+                          processId: a16937a2-ee96-48f7-b26c-45ef9df5e506
+                          processDate: '2021-01-02'
+                          links: []
+                      Page:
+                          size: 20
+                          totalElements: 166
+                          totalPages: 9
+                          number: 0
+                          
 components:
 
   responses: {}
