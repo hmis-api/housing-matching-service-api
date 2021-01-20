@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.1.1
+  version: 3.1.2
   contact:
     name: API Source
     email: support@hslynk.com
@@ -1688,6 +1688,67 @@ paths:
         schema:
           type: string
         description: client dedup id.
+  '/clients/{clientDedupId}/matches':
+    parameters:
+      - name: clientDedupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: client dedup Id
+      
+    post:
+      description: |
+                    Api to create manual match.
+      responses:
+        '200':
+          description: ' '
+          content:
+            application/json:
+                schema:
+                  example: |
+        '403':
+          description: |
+          content:
+            application/json:
+              schema: 
+                example: 
+                          error:
+                            - code: ERR_CODE_ACCESS_DENIED
+                              message: Housing unit not vacant
+        '404':
+          description: |
+          content:
+            application/json:
+              schema: 
+                example: 
+                          error:
+                            - code: ERR_CODE_RESOURCE_NOT_FOUND
+                              message: Housing unit not found                              
+                          
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                housingUnitId:
+                    type: string
+                    format: UUID
+                manualMatch:
+                    type: boolean
+                matchDate:
+                    type: string
+                reservationAdults:
+                    type: string
+                reservationChildren:
+                     type: string
+              type: object
+            example: 
+                housingUnitId: f791c86b-305e-476b-8480-5882b248275c
+                matchDate: '1610448358566'
+                reservationAdults: '2'
+                reservationChildren: '1'
+  
   '/matches':
     post:
       description: |
@@ -1712,6 +1773,7 @@ paths:
                   }
                 example:
                     processId: 113ee8f6-f078-4ca7-a023-6926acc1bbb2
+
   '/matches/client/{dedupclientid}/status':
     get:
       responses:
