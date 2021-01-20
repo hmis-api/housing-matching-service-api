@@ -1712,7 +1712,18 @@ paths:
           content:
             application/json:
               schema: 
-                example: 
+                    properties:
+                        error:
+                            items:
+                                properties:
+                                    code:
+                                        type: string
+                                    message:
+                                        type: string
+                                type: object
+                            type: array
+                    type: object
+              example: 
                           error:
                             - code: ERR_CODE_ACCESS_DENIED
                               message: Housing unit not vacant
@@ -1721,7 +1732,19 @@ paths:
           content:
             application/json:
               schema: 
-                example: 
+                          properties:
+                              error:
+                                  items:
+                                      properties:
+                                          code:
+                                              type: string
+                                          message:
+                                              type: string
+                                      type: object
+                                  type: array
+                          type: object
+
+              example: 
                           error:
                             - code: ERR_CODE_RESOURCE_NOT_FOUND
                               message: Housing unit not found                              
@@ -1734,8 +1757,6 @@ paths:
                 housingUnitId:
                     type: string
                     format: UUID
-                manualMatch:
-                    type: boolean
                 matchDate:
                     type: string
                 reservationAdults:
