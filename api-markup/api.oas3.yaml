@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Housing Matching Service
-  version: 3.1.2
+  version: 3.1.3
   contact:
     name: API Source
     email: support@hslynk.com
@@ -1795,7 +1795,301 @@ paths:
                 example:
                     processId: 113ee8f6-f078-4ca7-a023-6926acc1bbb2
 
-  '/matches/client/{dedupclientid}/status':
+  '/matches/client/{clientid}/status':
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+                schema:
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "clientId",
+                        "dedupClientId",
+                        "status",
+                        "statusDescription",
+                        "recipients",
+                        "active",
+                        "dateCreated",
+                        "dateUpdated",
+                        "userId"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "dedupClientId": {
+                          "type": "string",
+                          "format": "uuid",
+                        },
+                        "status": {
+                          "type": "integer"
+                        },
+                        "statusDescription": {
+                          "type": "string",
+                        },
+                        "recipients": {
+                          "type": "object"
+                        },
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "dateCreated": {
+                          "type": "string",
+                          "format": "MM-dd-YYYY HH:mm",
+                        },
+                        "dateUpdated": {
+                          "type": "string",
+                          "format": "MM-dd-YYYY HH:mm",
+                        },
+                        "userId": {
+                          "type": "string",
+                          "format": "uuid",
+                        }
+                      }
+                    }
+                  }
+                example:
+                  - id: ec501234-c61a-48bd-a85e-580af887a6a4
+                    clientId: 6f38e63f-7856-4fb1-838f-c03805eab244
+                    dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                    status: 3
+                    statusDescription: Agency scheduled appointment with Client
+                    recipients: {}
+                    active: false
+                    dateCreated: '10-25-2016 15:24'
+                    dateUpdated: '10-25-2016 15:24'
+                    userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                  - id: d406dbb7-cda3-4879-9e5d-989d5bc67b16
+                    clientId: 6f38e63f-7856-4fb1-838f-c03805eab244
+                    dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                    status: 2
+                    statusDescription: Client is contacted by Agency
+                    recipients: {}
+                    active: false
+                    dateCreated: '10-13-2016 02:26:09.066'
+                    dateUpdated: '10-13-2016 02:26:09.066'
+                    userId: 74fe590d-9389-4936-abef-1c18fbf14750
+                  - id: d4c767bc-cb85-44f9-a985-0447292fedf6
+                    clientId: 6f38e63f-7856-4fb1-838f-c03805eab244
+                    dedupClientId: 5dfe2ac2-43af-4d6d-9ee8-0e8fac5e3eg8
+                    status: 1
+                    statusDescription: Email sent to Referral Agency
+                    recipients: {}
+                    active: false
+                    dateCreated: '10-13-2016 02:23:59.124'
+                    dateUpdated: '10-13-2016 02:23:59.124'
+                    userId: 74fe590d-9389-4936-abef-1c18fbf14750
+        '404':
+          description: ''
+          content:
+            application/json:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                example:
+                  error:
+                    - code: ERR_CODE_CLIENT_NOT_FOUND
+                      message: Client not found
+      description: TO read a client status history
+      operationId: GET_matches-client-clientId-status
+    put:
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                example:
+                  error:
+                    - code: ERR_CODE_INVALID_STATUS
+                      message: Invalid status. Current status 1
+        '404':
+          description: ''
+          content:
+            application/json:
+                schema:
+                  {
+                    "type": "object",
+                    "required": [
+                      "error"
+                    ],
+                    "properties": {
+                      "error": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                            },
+                            "message": {
+                              "type": "string",
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                example:
+                  error:
+                    - code: ERR_CODE_CLIENT_NOT_FOUND
+                      message: Client not found
+      description: |
+        Updates the status of a client matching. A notification will be
+        triggered to the list of recipients set in the request body (recicipents
+        can be part of TO,CC, BCC). Also the notification will be CC'ed to
+        logged-in user (who is authorized to take actions for status to progress
+        to the next levels). User can provide additional comments as well while
+        updating the status of a specific match. Currently, the following are
+        the statuses that are allowed
+
+          Status 1 - Email sent to Referral Agency
+          Status 2 - Client is contacted by Agency
+          Status 3 - Agency scheduled appointment with Client
+          Status 4 - Client missed 1st appointment
+          Status 5 - Client missed 2nd appointment
+          Status 6 - Paperwork initiated by Agency
+          Status 7 - Client accepted referral
+          Status 8 - Move-in Preparation initiated by Agency
+          Status 9 - Client moved in
+          Status 10 - Referral is rejected
+      operationId: PUT_matches-client-clientId-status
+      requestBody:
+        content:
+          application/json:
+              schema:
+                {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "comments",
+                    "recipients"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                    },
+                    "comments": {
+                      "type": "string",
+                    },
+                    "recipients": {
+                      "type": "object",
+                      "required": [
+                        "toRecipients",
+                        "bccRecipients",
+                        "ccRecipients"
+                      ],
+                      "properties": {
+                        "toRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        },
+                        "bccRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        },
+                        "ccRecipients": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              example:
+                status: '1'
+                comments: forwarding to next level
+                recipients:
+                  toRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
+                  bccRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
+                  ccRecipients:
+                    - agent@gmail.com
+                    - client@hmis.com
+        required: true
+    parameters:
+      - name: clientid
+        in: path
+        required: true
+        schema:
+          type: string
+  '/v3/matches/client/{dedupclientid}/status':
     get:
       responses:
         '200':
@@ -2088,7 +2382,7 @@ paths:
         in: path
         required: true
         schema:
-          type: string
+          type: string          
   '/matchprocesslog':
     get:
       parameters:
